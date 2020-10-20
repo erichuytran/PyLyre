@@ -1,4 +1,6 @@
-# PyLyre
+![Logo](https://i.ibb.co/XpnzsTk/Py-Lyre-Final-No-Color.png)
+
+
 Audio Streaming Platform - Projet Python3 IPI
 
 <h3> Database structure </h3>
