@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-
+    {% block title %}<title>Acceuil</title>{% endblock %}
 
 {% block body %}
 
@@ -13,7 +13,11 @@
 
 <h1>Acceuil</h1>
 
+{{ notexise }}
+{% if session["user"] is defined %}
+    {{  session["user"][2] }}
+    {{  session["user"][3] }}
+{% else %}
 
-
-
+{% endif %}
 {% endblock %}
