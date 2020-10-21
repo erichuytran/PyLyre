@@ -22,6 +22,7 @@ def index():
 def signUp():
     conn = db_connection()
     cur = conn.cursor()
+    
     if request.method == 'POST':
         name = request.form["name"]
         lastname = request.form["lastName"]
@@ -29,10 +30,16 @@ def signUp():
         email = request.form["email"]
         password = request.form["password"]
         password_hash = generate_password_hash(password)
-        sql = """ INSERT INTO users(first_name, last_name,pseudo, email, password)
-                VALUES(?,?, ?, ?, ?)"""
-        cursor = cur.execute(sql, (name, lastname, pseudo, email, password_hash))
-        conn.commit()
+
+        try:
+            sql = """ INSERT INTO users(first_name, last_name,pseudo, email, password)
+                    VALUES(?,?, ?, ?, ?)"""
+            cursor = cur.execute(sql, (name, lastname, pseudo, email, password_hash))       
+            conn.commit()     
+        except sqlite3.Error as e:
+            print(e)
+            return f"Email already exist. Please sign-in."
+
         return f"USER: {cursor.lastrowid}", 201
     else:
         return render_template("signUp.html")

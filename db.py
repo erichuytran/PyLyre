@@ -9,7 +9,7 @@ sql_query = """ CREATE TABLE users(
            first_name String(120),
            last_name String(120),
            pseudo String(120),
-           email String(120),
+           email String(120) UNIQUE,
            password String(120),
            date_last_login TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
            
