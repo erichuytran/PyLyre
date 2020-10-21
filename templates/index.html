@@ -35,18 +35,21 @@
                                     <label for="exampleDropdownFormPassword1">Password</label>
                                     <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
                                 </div>
-                                <div class="form-group">
-                                    <!-- <div class="form-check">
+
+                                <!-- Remember me -->
+                                <!-- <div class="form-group">
+                                    <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="dropdownCheck">
                                         <label class="form-check-label" for="dropdownCheck">
                                             Remember me
                                         </label>
-                                    </div> -->
-                                </div>
+                                    </div>
+                                </div> -->
+                                
                                 <button type="submit" class="btn btn-primary">Sign in</button>
                             </form>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">New around here? Sign up</a>
+                            <a class="dropdown-item" href="{{ url_for('template'), filename='sign-up.html' }}">New to PyLyre? Sign up</a>
                             <a class="dropdown-item" href="#">Forgot password?</a>
                         </div>
                     </div>
