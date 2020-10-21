@@ -1,14 +1,14 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='static')
 
 
 def db_connection():
     conn = None
     try:
         conn = sqlite3.connect("pylyre.sqlite")
-    except sqlite3.error as e:
+    except sqlite3.Error as e:
         print(e)
     return conn
 
@@ -17,12 +17,8 @@ def db_connection():
 def index():
     return render_template('index.html')
 
-@app.route('/sign-up')
+@app.route('/signUp', methods=['GET', 'POST'])
 def signUp():
-    return render_template('sign-up.html')
-
-@app.route('/add', methods=['GET', 'POST'])
-def add():
     conn = db_connection()
     cur = conn.cursor()
     if request.method == 'POST':
@@ -37,4 +33,4 @@ def add():
         conn.commit()
         return f"USER: {cursor.lastrowid}", 201
     else:
-        return render_template("add.html")
+        return render_template("signUp.html")
