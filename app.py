@@ -3,6 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 
+
 def db_connection():
     conn = None
     try:
@@ -11,10 +12,14 @@ def db_connection():
         print(e)
     return conn
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/sign-up')
+def signUp():
+    return render_template('sign-up.html')
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():

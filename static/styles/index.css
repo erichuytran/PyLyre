@@ -1,0 +1,14 @@
+#navbarLogo {
+    width: auto;
+    height: 30px;
+}
+
+#mainLogo {
+    display: block;
+    width: auto;
+    height: 20em;
+
+    margin-top: 5em;
+    margin-left: auto;
+    margin-right: auto;
+}
