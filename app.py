@@ -24,7 +24,7 @@ def signUp():
     cur = conn.cursor()
     if request.method == 'POST':
         name = request.form["name"]
-        lastname = request.form["lastname"]
+        lastname = request.form["lastName"]
         pseudo = request.form["pseudo"]
         email = request.form["email"]
         password = request.form["password"]
