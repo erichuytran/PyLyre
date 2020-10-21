@@ -17,17 +17,21 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 40%;
+    width: 30%;
 }
 
 .container {
     border-radius: 5%;
-    width: 50%;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 45%;
+    margin: 2% auto;
 
     padding: 20px 40px 20px 40px;
 
     background-color: #f4f6f7;
+}
+
+.alert {
+    text-align: center;
+    margin:3% auto;
+    width: 45%;
 }

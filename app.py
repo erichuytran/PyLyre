@@ -22,7 +22,7 @@ def index():
 def signUp():
     conn = db_connection()
     cur = conn.cursor()
-    
+
     if request.method == 'POST':
         name = request.form["name"]
         lastname = request.form["lastName"]
@@ -38,7 +38,7 @@ def signUp():
             conn.commit()     
         except sqlite3.Error as e:
             print(e)
-            return f"Email already exist. Please sign-in."
+            return render_template('signUpError.html')
 
         return f"USER: {cursor.lastrowid}", 201
     else:
