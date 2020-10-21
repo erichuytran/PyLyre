@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
@@ -27,9 +28,10 @@ def signUp():
         pseudo = request.form["pseudo"]
         email = request.form["email"]
         password = request.form["password"]
+        password_hash = generate_password_hash(password)
         sql = """ INSERT INTO users(first_name, last_name,pseudo, email, password)
                 VALUES(?,?, ?, ?, ?)"""
-        cursor = cur.execute(sql, (name, lastname, pseudo, email, password))
+        cursor = cur.execute(sql, (name, lastname, pseudo, email, password_hash))
         conn.commit()
         return f"USER: {cursor.lastrowid}", 201
     else:
