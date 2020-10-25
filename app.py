@@ -17,42 +17,31 @@ def db_connection():
 def chekUser(email, password):
     conn = db_connection()
     cur = conn.cursor()
+
     if request.method == 'POST':
-        email = request.form["email"]
-        password = request.form["password"]
         sql = """ SELECT * FROM users WHERE email=? AND password=?  """
         cursor = cur.execute(sql, (email, password))
         users = cursor.fetchall()
-
         if users:
+            session["user"] = users[0]
             return "true"
-
-
-
         else:
             return "false"
-
-
+            
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    conn = db_connection()
-    cur = conn.cursor()
-
     if request.method == 'POST':
         email = request.form["email"]
         password = request.form["password"]
         if chekUser(email, password) == "true":
-            sql = """ SELECT * FROM users WHERE email=? AND password=?  """
-            cursor = cur.execute(sql, (email, password))
-            users = cursor.fetchall()
-            session["user"] = users[0]
             return render_template("index.html")
         else:
             return render_template("index.html", notexise="desole")
     else:
         return render_template("index.html")
+
 
 @app.route('/signUp', methods=['GET', 'POST'])
 def signUp():
