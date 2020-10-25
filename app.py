@@ -19,22 +19,33 @@ def chekUser(email, password):
     cur = conn.cursor()
 
     if request.method == 'POST':
-        sql = """ SELECT * FROM users WHERE email=? AND password=?  """
-        cursor = cur.execute(sql, (email, password))
-        users = cursor.fetchall()
-        if users:
-            session["user"] = users[0]
-            return "true"
-        else:
-            return "false"
-            
+        sqlGetPasswordHash = """ SELECT password FROM users WHERE email=? """
+        try:
+            cursor = cur.execute(sqlGetPasswordHash, (email,))
+            passwordHash = cursor.fetchall()
+            if check_password_hash(passwordHash[0][0], password) == True:
+                sql = """ SELECT * FROM users WHERE email=? AND password=? """
+                cursor = cur.execute(sql, (email, passwordHash[0][0]))
+                users = cursor.fetchall()
+                if users:
+                    session["user"] = users[0]
+                    return "true"
+                else:
+                    return "false"
+            else:
+                return "false"
 
+        except IndexError as e:
+            print(e)
+            return "false"
+        
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         email = request.form["email"]
         password = request.form["password"]
+        print(password)
         if chekUser(email, password) == "true":
             return render_template("index.html")
         else:
@@ -54,11 +65,11 @@ def signUp():
         pseudo = request.form["pseudo"]
         email = request.form["email"]
         password = request.form["password"]
-        password_hash = generate_password_hash(password)
+        password_hash = generate_password_hash(password, method='sha1', salt_length=8)
 
         try:
             sql = """ INSERT INTO users(first_name, last_name,pseudo, email, password)
-                    VALUES(?,?, ?, ?, ?)"""
+                    VALUES(?,?, ?, ?, ?) """
             cursor = cur.execute(sql, (name, lastname, pseudo, email, password_hash))       
             conn.commit()     
         except sqlite3.Error as e:
