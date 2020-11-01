@@ -9,57 +9,51 @@
     {% block title %} {% endblock %}
 </head>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  
+    <!-- Logo -->
+    <a class="navbar-brand" href="/">
+      <img id="navbarLogo" src="{{ url_for('static', filename='/img/PylyreLogo.png') }}" alt="Logo">
+    </a>
+  
+    {% if session["user"] is defined %}
 
-        <!-- Logo -->
-        <a class="navbar-brand" href="/">
-          <img id="navbarLogo" src="{{ url_for('static', filename='/img/PylyreLogo.png') }}" alt="Logo">
-       </a>
+    <a type="submit" href="{{ url_for('logout') }}" class="btn btn-dark" id="btnlogOut">logOut</a>
 
-        <!-- Login Dropdown -->
-        <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <div class="btn-group">
-                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Login
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <form class="px-4 py-3" method="post">
-                                <div class="form-group">
-                                    <label for="exampleDropdownFormEmail1">Email address</label>
-                                    <input type="email" class="form-control" id="exampleDropdownFormEmail1" name="email" placeholder="email@example.com">
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleDropdownFormPassword1">Password</label>
-                                    <input type="password" class="form-control" id="exampleDropdownFormPassword1" name="password" placeholder="Password">
-                                </div>
+    {% else %}
 
-                                <!-- Remember me -->
-                                <!-- <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                                        <label class="form-check-label" for="dropdownCheck">
-                                            Remember me
-                                        </label>
-                                    </div>
-                                </div> -->
-                                {% if session["user"] is defined %}
-
-                                     <a type="submit" href="{{ url_for('logout') }}"  class="btn btn-primary">Deconection</a>
-                                {% else %}
-                                 <button type="submit" class="btn btn-primary">Sign in</button>
-                                {% endif %}
-
-                            </form>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ url_for('signUp') }}">New to PyLyre? Sign up</a>
-                            <a class="dropdown-item" href="#">Forgot password?</a>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <!-- Login Dropdown -->
+    <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <div class="btn-group">
+            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              Login
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <form class="px-4 py-3" method="post">
+                <div class="form-group">
+                  <label for="exampleDropdownFormEmail1">Email address</label>
+                  <input type="email" class="form-control" id="exampleDropdownFormEmail1" name="email"
+                    placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                  <label for="exampleDropdownFormPassword1">Password</label>
+                  <input type="password" class="form-control" id="exampleDropdownFormPassword1" name="password"
+                    placeholder="Password">
+                </div>               
+                <button type="submit" class="btn btn-dark">Sign in</button>               
+              </form>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ url_for('signUp') }}">New to PyLyre? Sign up</a>
+              <a class="dropdown-item" href="#">Forgot password?</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    {% endif %}
+  </nav>
 <body>
 
 {% block body %} {% endblock %}

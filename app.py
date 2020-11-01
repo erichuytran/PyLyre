@@ -47,7 +47,7 @@ def index():
         password = request.form["password"]
         print(password)
         if chekUser(email, password) == "true":
-            return render_template("index.html")
+            return render_template("main_page.html")
         else:
             return render_template("index.html", notexise="desole")
     else:
