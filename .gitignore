@@ -1,3 +1,7 @@
 /venv/*
+/venvWindows/*
+.flaskenv
 .idea
+.vscode
 /__pycache__/*
+*.sqlite
