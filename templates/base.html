@@ -7,19 +7,31 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     {% block title %} {% endblock %}
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=GFS+Neohellenic:ital,wght@1,700&display=swap" rel="stylesheet">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  
+    
+    {% if session["user"] is defined %}
+
     <!-- Logo -->
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="/main_page">
       <img id="navbarLogo" src="{{ url_for('static', filename='/img/PylyreLogo.png') }}" alt="Logo">
     </a>
   
-    {% if session["user"] is defined %}
+
+    <div id="userNav">
+      <a href="/albums_page" class="userNavElement">ALBUMS</a>
+      <a href="/tracks_page" class="userNavElement">TRACKS</a>
+      <a href="/artists_page" class="userNavElement">ARTISTS</a>
+    </div>
 
     <a type="submit" href="{{ url_for('logout') }}" class="btn btn-dark" id="btnlogOut">logOut</a>
 
     {% else %}
+
+    <!-- Logo -->
+    <a class="navbar-brand" href="/main_page">
+      <img id="navbarLogo" src="{{ url_for('static', filename='/img/PylyreLogo.png') }}" alt="Logo">
+    </a>
 
     <!-- Login Dropdown -->
     <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNavDropdown">
@@ -45,7 +57,7 @@
                 <button type="submit" class="btn btn-dark">Sign in</button>               
               </form>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{{ url_for('signUp') }}">New to PyLyre? Sign up</a>
+              <a class="dropdown-item" href="/signUp">New to PyLyre? Sign up</a>
               <a class="dropdown-item" href="#">Forgot password?</a>
             </div>
           </div>
@@ -53,6 +65,7 @@
       </ul>
     </div>
     {% endif %}
+
   </nav>
 <body>
 

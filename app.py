@@ -80,8 +80,24 @@ def signUp():
     else:
         return render_template("signUp.html")
 
-
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()
     return redirect("/")
+
+@app.route('/main_page', methods=['GET', 'POST'])
+def main_page():
+    return render_template("main_page.html")
+
+@app.route('/albums_page', methods=['GET', 'POST'])
+def albums_page():
+    return render_template("albums_page.html")
+
+
+@app.route('/tracks_page', methods=['GET', 'POST'])
+def tracks_page():
+    return render_template("tracks_page.html")
+
+@app.route('/artists_page', methods=['GET', 'POST'])
+def artists_page():
+    return render_template("artists_page.html")
