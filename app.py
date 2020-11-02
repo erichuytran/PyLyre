@@ -96,7 +96,12 @@ def albums_page():
 
 @app.route('/tracks_page', methods=['GET', 'POST'])
 def tracks_page():
-    return render_template("tracks_page.html")
+    conn = db_connection()
+    cur = conn.cursor()
+    sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id"""
+    cursor = cur.execute(sql)
+    tracks = cursor.fetchall()
+    return render_template("tracks_page.html", track=tracks)
 
 @app.route('/artists_page', methods=['GET', 'POST'])
 def artists_page():
