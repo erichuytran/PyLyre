@@ -4,4 +4,3 @@
 .idea
 .vscode
 /__pycache__/*
-*.sqlite
