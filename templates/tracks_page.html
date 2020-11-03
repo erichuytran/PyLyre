@@ -4,11 +4,10 @@
 
 {% block body %}
 
-TRACKS PAGE
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-waves/0.7.5/waves.min.css">
 <link rel="stylesheet" href="https://michael-zhigulin.github.io/mz-codepen-projects/Material%20Design%20UI%20Audio%20Player/font/font.css">
 
-{{ track }}
+<!-- {{ track }}
 
 <figure>
     <figcaption>Listen to the T-Rex:</figcaption>
@@ -18,23 +17,20 @@ TRACKS PAGE
             Your browser does not support the
             <code>audio</code> element.
     </audio>
-</figure>
-
+</figure> -->
 
 {% for tracks in track %}
-
 
 <div class="container">
   <div class="player">
     <div class="like waves-effect waves-light">
-      <a href="add_favtrack/{{ tracks[0] }}"><i class="icon-heart"></i></a>
+      <a href="favtrack/{{ tracks[0] }}"><i class="icon-heart"></i></a>
     </div>
     <div class="mask"></div>
     <ul class="player-info info-one">
       <li>Artist: {{ tracks[9] }}</li>
       <li>Title: {{ tracks[3] }}</li>
       <a href="{{ tracks[11] }}"><li>Album: {{ tracks[13] }}</li></a>
-
     </ul>
     <ul class="player-info info-two">
       <li>{{ tracks[9] }}</li>
@@ -66,6 +62,7 @@ TRACKS PAGE
   <source src="{{ tracks[5] }} " type="audio/ogg">
       <source src="{{ tracks[5] }} " type="audio/mpeg">
 </audio>
+
 {% endfor %}
 
 

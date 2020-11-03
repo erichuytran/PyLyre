@@ -108,17 +108,45 @@ def artists_page():
     return render_template("artists_page.html")
 
 
-@app.route('/add_favtrack/<int:id>', methods=['GET', 'POST'])
-def add_faviretetrack(id):
+@app.route('/favtrack/<int:id>', methods=['GET', 'POST'])
+def add_favtrack(id):
     conn = db_connection()
     cur = conn.cursor()
     id_track = id
     id_user = session["user"][0]
-    sql = """ INSERT INTO tracks_liked(id_user, id_track)
+
+    sqlAdd = """ INSERT INTO tracks_liked(id_user, id_track)
                     VALUES(?,?) """
-    cursor = cur.execute(sql, (id_user, id_track))
-    conn.commit()
+    sqlCheck = """ SELECT id FROM tracks_liked WHERE id_user = ? AND id_track = ? """
+    sqlDelete = """ DELETE FROM tracks_liked WHERE id = ? """
 
 
-    return redirect(request.referrer)
+    sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_alubm = albums.id """
+    cursorTracks = cur.execute(sqlTracks)
+    tracks = cursorTracks.fetchall()
+
+    # cursor = cur.execute(sql, (id_user, id_track))
+    cursor = cur.execute(sqlCheck, (id_user, id_track))
+
+    #res countains the id value of the selected row (already liked track)
+    res = cursor.fetchall()
+
+    #try catch
+    # if not res:
+    #     cur.execute(sqlAdd, (id_user, id_track))
+    #     conn.commit()
+    #     return render_template("tracks_page.html", track=tracks)
+    # else:
+    #     cur.execute(sqlDelete, (res[0][0],))
+    #     conn.commit()
+    #     return render_template("tracks_page.html", track=tracks)
+
+    if not res:
+        cur.execute(sqlAdd, (id_user, id_track))
+        conn.commit()
+        return redirect(request.referrer)
+    else:
+        cur.execute(sqlDelete, (res[0][0],))
+        conn.commit()
+        return redirect(request.referrer)
 
