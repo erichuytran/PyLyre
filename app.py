@@ -120,5 +120,5 @@ def add_faviretetrack(id):
     conn.commit()
 
 
-    return render_template("tracks_page.html")
+    return redirect(request.referrer)
 
