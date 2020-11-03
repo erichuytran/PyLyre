@@ -98,7 +98,7 @@ def albums_page():
 def tracks_page():
     conn = db_connection()
     cur = conn.cursor()
-    sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id"""
+    sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_alubm = albums.id """
     cursor = cur.execute(sql)
     tracks = cursor.fetchall()
     return render_template("tracks_page.html", track=tracks)
@@ -106,3 +106,19 @@ def tracks_page():
 @app.route('/artists_page', methods=['GET', 'POST'])
 def artists_page():
     return render_template("artists_page.html")
+
+
+@app.route('/add_favtrack/<int:id>', methods=['GET', 'POST'])
+def add_faviretetrack(id):
+    conn = db_connection()
+    cur = conn.cursor()
+    id_track = id
+    id_user = session["user"][0]
+    sql = """ INSERT INTO tracks_liked(id_user, id_track)
+                    VALUES(?,?) """
+    cursor = cur.execute(sql, (id_user, id_track))
+    conn.commit()
+
+
+    return render_template("tracks_page.html")
+

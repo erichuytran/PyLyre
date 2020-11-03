@@ -27,13 +27,14 @@ TRACKS PAGE
 <div class="container">
   <div class="player">
     <div class="like waves-effect waves-light">
-      <i class="icon-heart"></i>
+      <a href="add_favtrack/{{ tracks[0] }}"><i class="icon-heart"></i></a>
     </div>
     <div class="mask"></div>
     <ul class="player-info info-one">
-      <li>{{ tracks[9] }}</li>
-      <li>{{ tracks[3] }}</li>
-      <li>{{ tracks[7] }}  </li>
+      <li>Artist: {{ tracks[9] }}</li>
+      <li>Title: {{ tracks[3] }}</li>
+      <a href="{{ tracks[11] }}"><li>Album: {{ tracks[13] }}</li></a>
+
     </ul>
     <ul class="player-info info-two">
       <li>{{ tracks[9] }}</li>
