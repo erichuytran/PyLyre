@@ -45,7 +45,6 @@ def index():
     if request.method == 'POST':
         email = request.form["email"]
         password = request.form["password"]
-        print(password)
         if chekUser(email, password) == "true":
             return render_template("main_page.html")
         else:
@@ -112,8 +111,11 @@ def artists_page():
 def add_favtrack(id):
     conn = db_connection()
     cur = conn.cursor()
+
     id_track = id
     id_user = session["user"][0]
+
+    trackInfoSql = """ SELECT title FROM tracks WHERE id = ? """
 
     sqlAdd = """ INSERT INTO tracks_liked(id_user, id_track)
                     VALUES(?,?) """
@@ -125,28 +127,21 @@ def add_favtrack(id):
     cursorTracks = cur.execute(sqlTracks)
     tracks = cursorTracks.fetchall()
 
-    # cursor = cur.execute(sql, (id_user, id_track))
+    #Requests if the track is already liked
     cursor = cur.execute(sqlCheck, (id_user, id_track))
 
     #res countains the id value of the selected row (already liked track)
     res = cursor.fetchall()
 
-    #try catch
-    # if not res:
-    #     cur.execute(sqlAdd, (id_user, id_track))
-    #     conn.commit()
-    #     return render_template("tracks_page.html", track=tracks)
-    # else:
-    #     cur.execute(sqlDelete, (res[0][0],))
-    #     conn.commit()
-    #     return render_template("tracks_page.html", track=tracks)
-
+    cursorTrackInfo = cur.execute(trackInfoSql, (id_track,))
+    trackInfo = cursorTrackInfo.fetchall()
+    
     if not res:
         cur.execute(sqlAdd, (id_user, id_track))
         conn.commit()
-        return redirect(request.referrer)
+        return render_template(("tracks_page.html"), track=tracks, trackName=trackInfo, isAdded=True)
     else:
         cur.execute(sqlDelete, (res[0][0],))
         conn.commit()
-        return redirect(request.referrer)
+        return render_template(("tracks_page.html"), track=tracks, trackName=trackInfo, isAdded=False)
 
