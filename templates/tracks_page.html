@@ -20,15 +20,15 @@
 </figure> -->
 
 {% if isAdded == True: %}
-  <div class="alert alert-warning" role="alert">
-    {{ trackName[0][0] }} was added to your favorites.
-  </div>
+    <div class="alert alert-warning" role="alert">
+      {{ trackName[0][0] }} was added to your favorites.
+    </div>
 {% elif isAdded == False: %}
-  <div class="alert alert-dark" role="alert">
-    {{ trackName[0][0] }} was deleted of your favorites.
-  </div>
+    <div class="alert alert-dark" role="alert">
+      {{ trackName[0][0] }} was deleted of your favorites.
+    </div>
 {% else: %}
-  {{ super() }}
+    {{ super() }}
 {% endif %}
 
 {% for tracks in track %}

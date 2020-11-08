@@ -73,7 +73,7 @@ def signUp():
             conn.commit()     
         except sqlite3.Error as e:
             print(e)
-            return render_template('signUpError.html')
+            return render_template("signUp.html", auth=False)
 
         return f"USER: {cursor.lastrowid}", 201
     else:
