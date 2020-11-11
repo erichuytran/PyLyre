@@ -4,6 +4,11 @@
 
 {% block body %}
 
+<div id="albumInfo">
+    <img src="{{ albumCoverArt[0] }}" alt="albumCoverArt" id="albumCoverArt">
+    <h3 id="albumName">{{ tracks[1][13] }}</h3>
+</div>
+
 {% if isAdded == True: %}
 <div class="alert alert-warning" role="alert">
     {{ trackName[0][0] }} was added to your favorites.

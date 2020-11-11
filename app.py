@@ -89,24 +89,37 @@ def main_page():
     return render_template("main_page.html")
 
 
-@app.route('/albums_page/', methods=['GET', 'POST'])
-def albums_page():
+@app.route('/albums_page/<int:id_artist>', methods=['GET', 'POST'])
+def albums_page(id_artist):
     conn = db_connection()
     cur = conn.cursor()
-    sql = """ SELECT * FROM albums """
-    cursor = cur.execute(sql)
-    album = cursor.fetchall()
-    return render_template("albums_page.html", albums=album)
 
+    if id_artist == 0:
+        sql = """ SELECT * FROM albums """
+        cursor = cur.execute(sql)
+        album = cursor.fetchall()
+        return render_template("albums_page.html", albums=album)
+    else:
+        sql = """ SELECT * FROM albums WHERE id_artist = ? """
+        cursor = cur.execute(sql, (id_artist,))
+        album = cursor.fetchall()
+        return render_template("albums_page.html", albums=album)
 
 @app.route('/album_selected/<int:albumId>', methods=['GET', 'POST'])
 def album_selected(albumId):
     conn = db_connection()
     cur = conn.cursor()
-    sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id WHERE id_album = ? """
-    cursor = cur.execute(sql, (albumId,))
+    
+    # get tracks
+    sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id WHERE id_album = ? """
+    cursor = cur.execute(sqlTracks, (albumId,))
     track = cursor.fetchall()
-    return render_template("album_selected.html", tracks=track)
+    
+    # get album cover
+    sqlAlbumCover = """ SELECT path_img FROM albums WHERE id = ? """
+    cursor = cur.execute(sqlAlbumCover, (albumId,))
+    albumCover = cursor.fetchone()
+    return render_template("album_selected.html", tracks=track, albumCoverArt=albumCover)
 
 
 @app.route('/tracks_page', methods=['GET', 'POST'])
@@ -120,8 +133,12 @@ def tracks_page():
 
 @app.route('/artists_page', methods=['GET', 'POST'])
 def artists_page():
-    return render_template("artists_page.html")
-
+    conn = db_connection()
+    cur = conn.cursor()
+    sql = """ SELECT * FROM artists """
+    cursor = cur.execute(sql)
+    artist = cursor.fetchall()
+    return render_template("artists_page.html", artists=artist)
 
 @app.route('/favtrack/<int:id>', methods=['GET', 'POST'])
 def add_favtrack(id):

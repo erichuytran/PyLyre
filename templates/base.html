@@ -20,7 +20,7 @@
   
 
     <div id="userNav">
-      <a href="/albums_page" class="userNavElement">ALBUMS</a>
+      <a href="{{ url_for('albums_page', id_artist=0) }}" class="userNavElement">ALBUMS</a>
       <a href="/tracks_page" class="userNavElement">TRACKS</a>
       <a href="/artists_page" class="userNavElement">ARTISTS</a>
     </div>
