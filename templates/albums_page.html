@@ -4,6 +4,10 @@
 
 {% block body %}
 
-ALBUM PAGE
+{% for album in albums %}
+
+    <div class="navBoxAlbumItem" style="background-image: url('{{ album[3] }}');background-size: cover;""><a href="{{ url_for('album_selected', albumId=album[0]) }}" class="albumItemLink"></a></div>
+
+{% endfor %}
 
 {% endblock %}

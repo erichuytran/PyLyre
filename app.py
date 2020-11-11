@@ -88,19 +88,35 @@ def logout():
 def main_page():
     return render_template("main_page.html")
 
-@app.route('/albums_page', methods=['GET', 'POST'])
+
+@app.route('/albums_page/', methods=['GET', 'POST'])
 def albums_page():
-    return render_template("albums_page.html")
+    conn = db_connection()
+    cur = conn.cursor()
+    sql = """ SELECT * FROM albums """
+    cursor = cur.execute(sql)
+    album = cursor.fetchall()
+    return render_template("albums_page.html", albums=album)
+
+
+@app.route('/album_selected/<int:albumId>', methods=['GET', 'POST'])
+def album_selected(albumId):
+    conn = db_connection()
+    cur = conn.cursor()
+    sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id WHERE id_album = ? """
+    cursor = cur.execute(sql, (albumId,))
+    track = cursor.fetchall()
+    return render_template("album_selected.html", tracks=track)
 
 
 @app.route('/tracks_page', methods=['GET', 'POST'])
 def tracks_page():
     conn = db_connection()
     cur = conn.cursor()
-    sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_alubm = albums.id """
+    sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
     cursor = cur.execute(sql)
-    tracks = cursor.fetchall()
-    return render_template("tracks_page.html", track=tracks)
+    track = cursor.fetchall()
+    return render_template("tracks_page.html", tracks=track)
 
 @app.route('/artists_page', methods=['GET', 'POST'])
 def artists_page():
