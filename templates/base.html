@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %} {% endblock %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.22.0/mediaelementplayer.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
-    {% block title %} {% endblock %}
-    <link href="https://fonts.googleapis.com/css2?family=GFS+Neohellenic:ital,wght@1,700&display=swap" rel="stylesheet">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
     
     {% if session["user"] is defined %}
 
@@ -24,7 +25,7 @@
       <a href="/artists_page" class="userNavElement">ARTISTS</a>
     </div>
 
-    <a type="submit" href="{{ url_for('logout') }}" class="btn btn-dark" id="btnlogOut">logOut</a>
+    <a type="submit" href="{{ url_for('logout') }}" id="btnLogout">LOGOUT</a>
 
     {% else %}
 
@@ -39,7 +40,7 @@
         <li class="nav-item dropdown">
           <div class="btn-group">
             <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
+              aria-expanded="false" id="btnLogin">
               Login
             </button>
             <div class="dropdown-menu dropdown-menu-right">
@@ -74,7 +75,8 @@
 
 
 </body>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.22.0/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.22.0/mediaelement-and-player.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='scripts/audioPlayer.js') }}"></script>
 </html>
