@@ -1,19 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}<title>Acceuil</title>{% endblock %}
+{% block title %}<title>Pylyre</title>{% endblock %}
 
 {% block body %}
 
 <div>
     <img id="mainLogo" src="{{ url_for('static', filename='/img/PyLyre_noBg.png') }}" alt="">
 </div>
-
-{{ notexise }}
-{% if session["user"] is defined %}
-    {{  session["user"][2] }}
-    {{  session["user"][3] }}
-{% else %}
-
-{% endif %}
 
 {% endblock %}

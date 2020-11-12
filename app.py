@@ -82,7 +82,7 @@ def signUp():
             print(e)
             return render_template("signUp.html", auth=False)
 
-        return f"USER: {cursor.lastrowid}", 201
+        return render_template("account_created.html")
     else:
         return render_template("signUp.html")
 
@@ -125,9 +125,9 @@ def album_selected(albumId):
 
     conn = db_connection()
     cur = conn.cursor()
-    
-    # get tracks
     sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id WHERE id_album = ? """
+
+    # get tracks
     cursor = cur.execute(sqlTracks, (albumId,))
     track = cursor.fetchall()
     
@@ -143,9 +143,19 @@ def tracks_page():
     if isLoggedIn() == False:
         return redirect("/")
 
+    liked = request.args.get('liked', False)
+    print('\n')
+    print(liked)
+    print('\n')
+
     conn = db_connection()
     cur = conn.cursor()
-    sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
+
+    if liked == False:
+        sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
+    else:
+        sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id INNER JOIN tracks_liked ON tracks.id = tracks_liked.track.id WHERE tracks_liked.user_id =  """
+
     cursor = cur.execute(sql)
     track = cursor.fetchall()
     return render_template("tracks_page.html", tracks=track)
@@ -155,8 +165,15 @@ def artists_page():
     if isLoggedIn() == False:
         return redirect("/")
 
+    liked = request.args.get('liked', False)
+
     conn = db_connection()
     cur = conn.cursor()
+    if liked == False:
+        sql = """ SELECT * FROM artists """
+    else:
+        sql = """  """
+
     sql = """ SELECT * FROM artists """
     cursor = cur.execute(sql)
     artist = cursor.fetchall()
