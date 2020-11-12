@@ -26,7 +26,7 @@
                 {{ track[3] }}
             </h4>
             <h5>{{ track[9] }}</h5>
-            <a href="{{ track[11] }}" id="albumLink">
+            <a href="{{ url_for('album_selected', albumId=track[11]) }}" id="albumLink">
                 Album: {{ track[13] }}
             </a>
         </div>
