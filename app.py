@@ -5,6 +5,13 @@ import sqlite3, json
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config["SECRET_KEY"] = "IPI"
 
+def isLoggedIn():
+    if not session:
+        print("SESSION : EMPTY, REDIRECTION")
+        return False
+    else:
+        return True
+
 def db_connection():
     conn = None
     try:
@@ -86,11 +93,17 @@ def logout():
 
 @app.route('/main_page', methods=['GET', 'POST'])
 def main_page():
+    if isLoggedIn() == False:
+        return redirect("/")
+
     return render_template("main_page.html")
 
 
 @app.route('/albums_page/<int:id_artist>', methods=['GET', 'POST'])
 def albums_page(id_artist):
+    if isLoggedIn() == False:
+        return redirect("/")
+
     conn = db_connection()
     cur = conn.cursor()
 
@@ -107,6 +120,9 @@ def albums_page(id_artist):
 
 @app.route('/album_selected/<int:albumId>', methods=['GET', 'POST'])
 def album_selected(albumId):
+    if isLoggedIn() == False:
+        return redirect("/")
+
     conn = db_connection()
     cur = conn.cursor()
     
@@ -124,6 +140,9 @@ def album_selected(albumId):
 
 @app.route('/tracks_page', methods=['GET', 'POST'])
 def tracks_page():
+    if isLoggedIn() == False:
+        return redirect("/")
+
     conn = db_connection()
     cur = conn.cursor()
     sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
@@ -133,6 +152,9 @@ def tracks_page():
 
 @app.route('/artists_page', methods=['GET', 'POST'])
 def artists_page():
+    if isLoggedIn() == False:
+        return redirect("/")
+
     conn = db_connection()
     cur = conn.cursor()
     sql = """ SELECT * FROM artists """
@@ -142,12 +164,15 @@ def artists_page():
 
 @app.route('/favtrack/<int:id>', methods=['GET', 'POST'])
 def add_favtrack(id):
+    if isLoggedIn() == False:
+        return redirect("/")
+
     conn = db_connection()
     cur = conn.cursor()
 
     id_track = id
     id_user = session["user"][0]
-
+ 
     trackInfoSql = """ SELECT title FROM tracks WHERE id = ? """
 
     sqlAdd = """ INSERT INTO tracks_liked(id_user, id_track)
@@ -156,7 +181,7 @@ def add_favtrack(id):
     sqlDelete = """ DELETE FROM tracks_liked WHERE id = ? """
 
 
-    sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_alubm = albums.id """
+    sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
     cursorTracks = cur.execute(sqlTracks)
     tracks = cursorTracks.fetchall()
 
