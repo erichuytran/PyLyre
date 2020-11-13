@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 import sqlite3, json
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
@@ -105,6 +106,15 @@ def signUp():
 # route de déconnexion
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
+    conn = db_connection()
+    cur = conn.cursor()
+    id_user = session["user"][0]
+    date = datetime.utcnow()
+
+    sql = """ UPDATE users  SET date_last_login = ?  WHERE id = ? """
+
+    cur.execute(sql, (date, id_user))
+    conn.commit()
     session.clear()
     #redirection vers la page d'accueil après la déconnexion
     return redirect("/")
@@ -115,9 +125,28 @@ def main_page():
     # check de l'etat de connection de l'utilisateur
     if isLoggedIn() == False:
         return redirect("/")
+        
+    conn = db_connection()
+    cur = conn.cursor()
+    id_user = session["user"][0]
 
-    # affichage de la page principale
-    return render_template("main_page.html")
+    trakLike = """  SELECT id_track  FROM tracks_liked  WHERE id_user = ? """
+    curLikeTrak = cur.execute(trakLike, (id_user,))
+    TrackLikes = [item[0] for item in curLikeTrak.fetchall()]
+
+
+    dateTrack = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id    """
+    cursor = cur.execute(dateTrack )
+    dateTracks = cursor.fetchall()
+
+
+
+    dateConne = """ SELECT * FROM users WHERE id = ? """
+    cursorDateConn = cur.execute(dateConne, (id_user,))
+    dateC = cursorDateConn.fetchall()
+
+
+    return render_template("main_page.html", dateC=dateC, dateTracks=dateTracks, TrackLikes=TrackLikes,id_user=id_user)
 
 # page de selection d'albums
 @app.route('/albums_page/<int:id_artist>', methods=['GET', 'POST'])
