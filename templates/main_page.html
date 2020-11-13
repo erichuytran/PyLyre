@@ -9,13 +9,12 @@ MAIN PAGE
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-waves/0.7.5/waves.min.css">
 <link rel="stylesheet" href="https://michael-zhigulin.github.io/mz-codepen-projects/Material%20Design%20UI%20Audio%20Player/font/font.css">
 
-{{ test }}
 
 {% for x  in dateTracks %}
 
   {%  if  x[0] not in TrackLikes  and    x[6]  >  session["user"][6]   %}
 
-    <p>Nouvelle(s) track que tu as raté:  {{ x[3] }} {{ x[9]}}  id: {{ x[0] }}     <a href="favtrack/{{ x[0] }}"><i class="icon-heart"></i></a></p>
+    <p style="color: red">Nouvelle(s) track que tu as raté:  {{ x[3] }} {{ x[9]}}  id: {{ x[0] }}     <a href="favtrack/{{ x[0] }}"><i class="icon-heart"></i></a></p>
 
 
 
