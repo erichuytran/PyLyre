@@ -263,6 +263,16 @@ body {
 	margin-top: 400%;
 }
 
+.likePageDiv {
+	font-family: "Lato";
+    font-style: normal;
+	font-weight: bold;
+	letter-spacing: 10px;
+	color: #a87903;
+	margin: 50px auto 50px auto;
+	width: 11.54%;
+}
+
 
 /******************************* ************ *******************************/
 /******************************* AUDIO PLAYER *******************************/

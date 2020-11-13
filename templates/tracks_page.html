@@ -4,6 +4,12 @@
 
 {% block body %}
 
+{% if likePage == True: %}
+    <h3 class="likePageDiv">LIKES</h3>
+{% else: %}
+    <!-- Don't do anything -->
+{% endif %}
+
 {% if isAdded == True: %}
     <div class="alert alert-warning" role="alert">
       {{ trackName[0][0] }} was added to your favorites.

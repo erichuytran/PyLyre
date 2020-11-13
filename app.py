@@ -55,7 +55,7 @@ def index():
         if chekUser(email, password) == "true":
             return render_template("main_page.html")
         else:
-            return render_template("index.html", notexise="desole")
+            return render_template("index.html", failedLogin=True)
     else:
         return render_template("index.html")
 
@@ -76,7 +76,7 @@ def signUp():
         try:
             sql = """ INSERT INTO users(first_name, last_name,pseudo, email, password)
                     VALUES(?,?, ?, ?, ?) """
-            cursor = cur.execute(sql, (name, lastname, pseudo, email, password_hash))       
+            cur.execute(sql, (name, lastname, pseudo, email, password_hash))       
             conn.commit()     
         except sqlite3.Error as e:
             print(e)
@@ -144,21 +144,22 @@ def tracks_page():
         return redirect("/")
 
     liked = request.args.get('liked', False)
-    print('\n')
-    print(liked)
-    print('\n')
 
     conn = db_connection()
     cur = conn.cursor()
+    id_user = session["user"][0]
 
     if liked == False:
         sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
+        cursor = cur.execute(sql)
+        track = cursor.fetchall()
+        return render_template("tracks_page.html", tracks=track, likePage=False)
     else:
-        sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id INNER JOIN tracks_liked ON tracks.id = tracks_liked.track.id WHERE tracks_liked.user_id =  """
-
-    cursor = cur.execute(sql)
-    track = cursor.fetchall()
-    return render_template("tracks_page.html", tracks=track)
+        sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id INNER JOIN tracks_liked ON tracks.id = tracks_liked.id_track WHERE id_user = ? """
+        cursor = cur.execute(sql, (id_user,))
+        track = cursor.fetchall()
+        return render_template("tracks_page.html", tracks=track, likePage=True)
+      
 
 @app.route('/artists_page', methods=['GET', 'POST'])
 def artists_page():

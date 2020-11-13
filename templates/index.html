@@ -8,4 +8,12 @@
     <img id="mainLogo" src="{{ url_for('static', filename='/img/PyLyre_noBg.png') }}" alt="">
 </div>
 
+{% if failedLogin == True: %}
+
+    <div class="alert alert-warning" role="alert">
+        Loggin failed. Please try again
+    </div>
+
+{% endif %}
+
 {% endblock %}
