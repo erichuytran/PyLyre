@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-    {% block title %}<title>Acceuil</title>{% endblock %}
+{% block title %}<title>Pylyre</title>{% endblock %}
 
 {% block body %}
 
@@ -8,16 +8,12 @@
     <img id="mainLogo" src="{{ url_for('static', filename='/img/PyLyre_noBg.png') }}" alt="">
 </div>
 
+{% if failedLogin == True: %}
 
-
-
-<h1>Acceuil</h1>
-
-{{ notexise }}
-{% if session["user"] is defined %}
-    {{  session["user"][2] }}
-    {{  session["user"][3] }}
-{% else %}
+    <div class="alert alert-warning" role="alert">
+        Loggin failed. Please try again
+    </div>
 
 {% endif %}
+
 {% endblock %}

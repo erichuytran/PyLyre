@@ -3,11 +3,13 @@
 {% block title %}<title>Pylyre</title>{% endblock %}
 
 {% block body %}
+
 MAIN PAGE
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-waves/0.7.5/waves.min.css">
 <link rel="stylesheet" href="https://michael-zhigulin.github.io/mz-codepen-projects/Material%20Design%20UI%20Audio%20Player/font/font.css">
-{{ TrackLikes }}
 
+{{ test }}
 
 {% for x  in dateTracks %}
 
@@ -21,6 +23,14 @@ MAIN PAGE
 {% endif %}
 
 {% endfor %}
+
+
+
+<div id="navBox">
+    <div class="navBoxItem"><a href="{{ url_for('albums_page', id_artist=0) }}" class="navBoxItemLink"><span id="navBoxItemTitle">ALBUMS</span></a></div>
+    <div class="navBoxItem"><a href="/tracks_page" class="navBoxItemLink"><span id="navBoxItemTitle">TRACKS</span></a></div>
+    <div class="navBoxItem"><a href="/artists_page" class="navBoxItemLink"><span id="navBoxItemTitle">ARTISTS</span></a></div>
+</div>
 
 
 {% endblock %}

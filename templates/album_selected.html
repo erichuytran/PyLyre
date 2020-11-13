@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Pylyre</title>{% endblock %}
+
+{% block body %}
+
+<div id="albumInfo">
+    <img src="{{ albumCoverArt[0] }}" alt="albumCoverArt" id="albumCoverArt">
+    <h3 id="albumName">{{ tracks[0][13] }}</h3>
+</div>
+
+{% if isAdded == True: %}
+<div class="alert alert-warning" role="alert">
+    {{ trackName[0][0] }} was added to your favorites.
+</div>
+{% elif isAdded == False: %}
+<div class="alert alert-dark" role="alert">
+    {{ trackName[0][0] }} was deleted of your favorites.
+</div>
+{% else: %}
+{{ super() }}
+{% endif %}
+
+
+{% for track in tracks %}
+<article>
+    <a href="{{ url_for('add_favtrack', id=track[0]) }}"><span><img
+                src="{{ url_for('static', filename='/img/iconLike_default.png') }}" alt="btnFav" id="btnFav"></span></a>
+    <img src="{{ track[4] }}" alt="coverArt" id="coverArtImg">
+    <div class="cont">
+        <h4>
+            {{ track[3] }}
+        </h4>
+        <h5>{{ track[9] }}</h5>
+        <a href="{{ track[11] }}" id="albumLink">
+            Album: {{ track[13] }}
+        </a>
+    </div>
+    <div id="track">
+
+        <audio controls class="audio">
+            <source type="audio/mpeg" src="{{ track[5] }}">
+            Your browser does not support the
+            <code>audio</code> element.
+        </audio>
+    </div>
+</article>
+
+{% endfor %}
+
+{% endblock %}
