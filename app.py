@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, session, jsonify
+from flask import Flask, render_template, request, redirect, session, jsonify, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3, json
-
+from datetime import datetime
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config["SECRET_KEY"] = "IPI"
 
@@ -82,12 +82,41 @@ def signUp():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
+    conn = db_connection()
+    cur = conn.cursor()
+    id_user = session["user"][0]
+    date = datetime.utcnow()
+
+    sql = """ UPDATE users  SET date_last_login = ?  WHERE id = ? """
+
+    cursor = cur.execute(sql, (date, id_user))
+    conn.commit()
     session.clear()
     return redirect("/")
 
 @app.route('/main_page', methods=['GET', 'POST'])
 def main_page():
-    return render_template("main_page.html")
+    conn = db_connection()
+    cur = conn.cursor()
+    id_user = session["user"][0]
+
+    trakLike = """  SELECT id_track   FROM tracks_liked  WHERE id_user = ? """
+    curLikeTrak = cur.execute(trakLike, (id_user,))
+    TrackLikes = [item[0] for item in curLikeTrak.fetchall()]
+
+
+    dateTrack = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_alubm = albums.id    """
+    cursor = cur.execute(dateTrack )
+    dateTracks = cursor.fetchall()
+
+
+
+    dateConne = """ SELECT * FROM users WHERE id = ? """
+    cursorDateConn = cur.execute(dateConne, (id_user,))
+    dateC = cursorDateConn.fetchall()
+
+
+    return render_template("main_page.html", dateC=dateC, dateTracks=dateTracks, TrackLikes=TrackLikes)
 
 @app.route('/albums_page', methods=['GET', 'POST'])
 def albums_page():
@@ -99,6 +128,7 @@ def tracks_page():
     conn = db_connection()
     cur = conn.cursor()
     sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_alubm = albums.id """
+
     cursor = cur.execute(sql)
     tracks = cursor.fetchall()
     return render_template("tracks_page.html", track=tracks)
@@ -119,6 +149,10 @@ def add_favtrack(id):
                     VALUES(?,?) """
     sqlCheck = """ SELECT id FROM tracks_liked WHERE id_user = ? AND id_track = ? """
     sqlDelete = """ DELETE FROM tracks_liked WHERE id = ? """
+
+
+
+
 
 
     sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_alubm = albums.id """
@@ -144,9 +178,14 @@ def add_favtrack(id):
     if not res:
         cur.execute(sqlAdd, (id_user, id_track))
         conn.commit()
+
         return redirect(request.referrer)
     else:
         cur.execute(sqlDelete, (res[0][0],))
         conn.commit()
         return redirect(request.referrer)
+
+
+
+
 
