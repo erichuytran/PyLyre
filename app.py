@@ -134,19 +134,15 @@ def main_page():
     curLikeTrak = cur.execute(trakLike, (id_user,))
     TrackLikes = [item[0] for item in curLikeTrak.fetchall()]
 
-
-    dateTrack = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id    """
+    dateTrack = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
     cursor = cur.execute(dateTrack )
     dateTracks = cursor.fetchall()
-
-
 
     dateConne = """ SELECT * FROM users WHERE id = ? """
     cursorDateConn = cur.execute(dateConne, (id_user,))
     dateC = cursorDateConn.fetchall()
 
-
-    return render_template("main_page.html", dateC=dateC, dateTracks=dateTracks, TrackLikes=TrackLikes,id_user=id_user)
+    return render_template("main_page.html", dateC=dateC, dateTracks=dateTracks, TrackLikes=TrackLikes, id_user=id_user)
 
 # page de selection d'albums
 @app.route('/albums_page/<int:id_artist>', methods=['GET', 'POST'])

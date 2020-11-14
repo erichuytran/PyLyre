@@ -8,15 +8,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-waves/0.7.5/waves.min.css">
 <link rel="stylesheet" href="https://michael-zhigulin.github.io/mz-codepen-projects/Material%20Design%20UI%20Audio%20Player/font/font.css">
 
-
-{% for tracks in track %}
-
-JOPA
-<div class="container">
-  <div class="player">
-    <div class="like waves-effect waves-light">
-      <a href="favtrack/{{ tracks[0] }}"><i class="icon-heart"></i></a>
-
 {% if likePage == True: %}
     <h3 class="likePageDiv">LIKES</h3>
 {% else: %}
@@ -25,18 +16,17 @@ JOPA
 
 {% if isAdded == True: %}
     <div class="alert alert-warning" role="alert">
-      {{ trackName[0][0] }} was added to your favorites.
-
+        {{ trackName[0][0] }} was added to your favorites.
     </div>
 {% elif isAdded == False: %}
     <div class="alert alert-dark" role="alert">
-      {{ trackName[0][0] }} was deleted of your favorites.
+        {{ trackName[0][0] }} was deleted of your favorites.
     </div>
 {% else: %}
     {{ super() }}
 {% endif %}
 
-{% endfor %}
+
 {% for track in tracks %}
     <article>
         <a href="{{ url_for('add_favtrack', id=track[0]) }}"><span><img src="{{ url_for('static', filename='/img/iconLike_default.png') }}" alt="btnFav" id="btnFav"></span></a>
