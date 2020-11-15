@@ -179,11 +179,16 @@ body {
 }
 
 #albumInfo {
-	margin: 50px auto 50px 22%;
+	margin: 50px auto 30px 22%;
 	width: 50%;
 }
 
-#albumCoverArt {
+#artistInfo {
+	margin: 50px auto 0px 22%;
+	width: 50%;
+}
+
+.coverArt {
 	display: block;
 	object-fit: cover;
 	margin: 20px auto;
@@ -199,6 +204,77 @@ body {
 	font-size: 50px;
 	color: rgb(240, 240, 240);
 	text-align: center;
+}
+
+#artistName {
+	font-family: "Lato";
+    font-style: normal;
+	font-weight: bold;
+	font-size: 50px;
+	color: rgb(240, 240, 240);
+	text-align: center;
+}
+
+.likePageDiv {
+	font-family: "Lato";
+    font-style: normal;
+	font-weight: bold;
+	letter-spacing: 10px;
+	color: #a87903;
+	margin: 50px auto 50px auto;
+	width: 11.54%;
+}
+
+#notificationBox {
+	position : absolute;
+	width: 50%;
+	color: #a87903;
+	font-family: "Lato";
+    font-style: normal;
+	text-align: center;
+	font-weight: bold;
+	font-size: 30px;
+	text-shadow: 4px 4px rgba(0, 0, 0, 0.3);
+	letter-spacing: 2px;
+	margin: 0 21%;
+	top: 80%;
+}
+
+.notificationElement {
+	display: inline-block;
+	font-family: "Lato";
+	width: 80%;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	padding: 10px;
+	box-sizing: border-box;
+	font-weight: normal;
+	box-shadow: 0 0 21px 0px rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
+	color: rgb(255, 255, 255);
+	text-decoration: none;
+	transition: color 0.3s;
+}
+
+.notificationElement:hover {
+	color: #a87903;
+	text-decoration: none;
+}
+
+#btnAlbumFav {
+    width: 3%;
+	height: auto;
+	margin: 20px 48% 0px 48%;
+}
+
+.likePageArtists{
+	font-family: "Lato";
+    font-style: normal;
+	font-weight: bold;
+	letter-spacing: 10px;
+	color: #a87903;
+	margin: 50px auto 50px auto;
+	width: 30%;
 }
 
 /*
@@ -262,17 +338,6 @@ body {
 	margin-left: 11px;
 	margin-top: 400%;
 }
-
-.likePageDiv {
-	font-family: "Lato";
-    font-style: normal;
-	font-weight: bold;
-	letter-spacing: 10px;
-	color: #a87903;
-	margin: 50px auto 50px auto;
-	width: 11.54%;
-}
-
 
 /******************************* ************ *******************************/
 /******************************* AUDIO PLAYER *******************************/

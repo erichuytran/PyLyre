@@ -159,14 +159,14 @@ def albums_page(id_artist):
         sql = """ SELECT * FROM albums """
         cursor = cur.execute(sql)
         album = cursor.fetchall()
-        return render_template("albums_page.html", albums=album)
 
     # si non, on affiche les albums de l'artiste séléctionné (dépend de artists_page)
     else:
-        sql = """ SELECT * FROM albums WHERE id_artist = ? """
+        sql = """ SELECT * FROM albums INNER JOIN artists ON albums.id_artist = artists.id WHERE id_artist = ? """
         cursor = cur.execute(sql, (id_artist,))
         album = cursor.fetchall()
-        return render_template("albums_page.html", albums=album)
+
+    return render_template("albums_page.html", albums=album, id_artist=id_artist)
 
 # page d'album selectionné
 @app.route('/album_selected/<int:albumId>', methods=['GET', 'POST'])
@@ -204,6 +204,7 @@ def tracks_page():
     cur = conn.cursor()
     id_user = session["user"][0]
 
+    # adaptation de la requette en fonction de la valeur de 'liked'
     # affichage de toutes les musiques
     if liked == False:
         sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
@@ -232,15 +233,20 @@ def artists_page():
     cur = conn.cursor()
 
     # adaptation de la requette en fonction de la valeur de 'liked'
+    # affichage de tous les artistes
     if liked == False:
         sql = """ SELECT * FROM artists """
+        cursor = cur.execute(sql)
+        artist = cursor.fetchall()
+        return render_template("artists_page.html", artists=artist, likePage=False)
+    
+        #affichage des artistes likés
     else:
-        sql = """  """
-
-    sql = """ SELECT * FROM artists """
-    cursor = cur.execute(sql)
-    artist = cursor.fetchall()
-    return render_template("artists_page.html", artists=artist)
+        sql = """ SELECT * FROM artists INNER JOIN artists_liked ON artists.id = id_artist """
+        cursor = cur.execute(sql)   
+        artist = cursor.fetchall()
+        return render_template("artists_page.html", artists=artist, likePage=True)
+    
 
 # route d'ajout d'une musique aux favoris
 @app.route('/favtrack/<int:id>', methods=['GET', 'POST'])
@@ -265,7 +271,7 @@ def add_favtrack(id):
 
     sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
     cursorTracks = cur.execute(sqlTracks)
-    tracks = cursorTracks.fetchall()
+    track = cursorTracks.fetchall()
 
     #Requests if the track is already liked
     cursor = cur.execute(sqlCheck, (id_user, id_track))
@@ -279,9 +285,49 @@ def add_favtrack(id):
     if not res:
         cur.execute(sqlAdd, (id_user, id_track))
         conn.commit()
-        return render_template(("tracks_page.html"), track=tracks, trackName=trackInfo, isAdded=True)
+        return render_template(("tracks_page.html"), tracks=track, trackName=trackInfo, isAdded=True)
     else:
         cur.execute(sqlDelete, (res[0][0],))
         conn.commit()
-        return render_template(("tracks_page.html"), track=tracks, trackName=trackInfo, isAdded=False)
+        return render_template(("tracks_page.html"), tracks=track, trackName=trackInfo, isAdded=False)
+
+# route d'ajout d'un artiste aux favoris
+
+
+@app.route('/favartist/<int:id>', methods=['GET', 'POST'])
+def add_favartist(id):
+    # check de l'etat de connection de l'utilisateur
+    if isLoggedIn() == False:
+        return redirect("/")
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    id_artist = id
+    id_user = session["user"][0]
+
+    sqlAdd = """ INSERT INTO artists_liked(id_user, id_artist)
+                    VALUES(?,?) """
+    sqlCheck = """ SELECT id FROM artists_liked WHERE id_user = ? AND id_artist = ? """
+    sqlDelete = """ DELETE FROM artists_liked WHERE id = ? """
+
+    sqlAlbum = """ SELECT * FROM albums INNER JOIN artists ON albums.id_artist = artists.id WHERE id_artist = ? """
+    cursor = cur.execute(sqlAlbum, (id_artist,))
+    album = cursor.fetchall()
+
+    #Requests if the track is already liked
+    cursor = cur.execute(sqlCheck, (id_user, id_artist))
+
+    #res countains the id value of the selected row (already liked artist)
+    res = cursor.fetchall()
+
+    if not res:
+        cur.execute(sqlAdd, (id_user, id_artist))
+        conn.commit()
+        return render_template(("albums_page.html"), id_artist=id_artist, albums=album, isAdded=True)
+    else:
+        cur.execute(sqlDelete, (res[0][0],))
+        conn.commit()
+        return render_template(("albums_page.html"), id_artist=id_artist, albums=album, isAdded=False)
+
 
