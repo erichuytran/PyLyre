@@ -130,19 +130,19 @@ def main_page():
     cur = conn.cursor()
     id_user = session["user"][0]
 
-    trakLike = """  SELECT id_track  FROM tracks_liked  WHERE id_user = ? """
-    curLikeTrak = cur.execute(trakLike, (id_user,))
-    TrackLikes = [item[0] for item in curLikeTrak.fetchall()]
+    artistLiked = """ SELECT id_artist FROM artists_liked WHERE id_user = ? """
+    curLikeArtists = cur.execute(artistLiked, (id_user,))
+    ArtistLiked = [item[0] for item in curLikeArtists.fetchall()]
 
-    dateTrack = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
-    cursor = cur.execute(dateTrack )
-    dateTracks = cursor.fetchall()
+    albumInfo = """ SELECT * FROM albums INNER JOIN artists ON albums.id_artist = artists.id """
+    cursor = cur.execute(albumInfo)
+    albumInfo = cursor.fetchall()
 
     dateConne = """ SELECT * FROM users WHERE id = ? """
     cursorDateConn = cur.execute(dateConne, (id_user,))
     dateC = cursorDateConn.fetchall()
 
-    return render_template("main_page.html", dateC=dateC, dateTracks=dateTracks, TrackLikes=TrackLikes, id_user=id_user)
+    return render_template("main_page.html", dateC=dateC, albumInfo=albumInfo, ArtistLiked=ArtistLiked, id_user=id_user)
 
 # page de selection d'albums
 @app.route('/albums_page/<int:id_artist>', methods=['GET', 'POST'])

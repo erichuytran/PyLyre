@@ -13,10 +13,12 @@
         <div class="navBoxItem"><a href="/artists_page" class="navBoxItemLink"><span id="navBoxItemTitle">ARTISTS</span></a></div>
     </div>
 
-    {% for track in dateTracks %}
-        {% if  track[0] not in TrackLikes and track[6] > session["user"][6] %}
-            <a href="{{ url_for('album_selected', albumId=track[11]) }}" class="notificationElement">{{ track[9]}} - {{ track[3] }}</a>
-        {% endif %}  
-    {% endfor %}            
+    <div id="notificationBox">
+        {% for album in albumInfo %}
+            {% if album[1] in ArtistLiked and album[4] > session["user"][6] %}
+                NEW RELEASES : <a href="{{ url_for('album_selected', albumId=album[0]) }}" class="notificationElement">{{ album[6] }} - {{ album[2] }}</a>
+            {% endif %}  
+        {% endfor %}            
+    </div>
         
 {% endblock %}
