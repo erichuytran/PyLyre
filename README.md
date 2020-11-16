@@ -9,9 +9,12 @@ Audio Streaming Platform - Projet Python3 IPI
 
 <h2> Guide de premiers pas </h2>
 
+Pour initaliser la base de données : Un fichier *pylyre.sql* est fourni dans le dépot. Créer la base de donnée avec la commande : 
+> sqlite3.exe pylyre.sqlite < pylyre.sql
+
 Se créer un compte (plus rigolo) ou utiliser le compte suivant (avec déjà des likes de musiques, des abonnements à des artistes) :
-  -> email : erictran@live.fr
-  -> mot de passe : admin
+* email : erictran@live.fr
+* mot de passe : admin
 
 <h3> Spécifications </h3>
 
