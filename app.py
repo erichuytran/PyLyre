@@ -130,14 +130,18 @@ def main_page():
     cur = conn.cursor()
     id_user = session["user"][0]
 
+    # récupération d'informations pour les notifications de nouvelles sorties
+    # récupération des artistes likés
     artistLiked = """ SELECT id_artist FROM artists_liked WHERE id_user = ? """
     curLikeArtists = cur.execute(artistLiked, (id_user,))
     ArtistLiked = [item[0] for item in curLikeArtists.fetchall()]
 
+    # récupération des informations d'albums
     albumInfo = """ SELECT * FROM albums INNER JOIN artists ON albums.id_artist = artists.id """
     cursor = cur.execute(albumInfo)
     albumInfo = cursor.fetchall()
 
+    # récupération de la date de dernière connexion de l'utilisateur
     dateConne = """ SELECT * FROM users WHERE id = ? """
     cursorDateConn = cur.execute(dateConne, (id_user,))
     dateC = cursorDateConn.fetchall()
@@ -177,13 +181,13 @@ def album_selected(albumId):
 
     conn = db_connection()
     cur = conn.cursor()
-    sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id WHERE id_album = ? """
 
-    # get tracks
+    # récupération des musiques associées à l'album
+    sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id WHERE id_album = ? """
     cursor = cur.execute(sqlTracks, (albumId,))
     track = cursor.fetchall()
     
-    # get album cover
+    # récupération de l'image de l'album
     sqlAlbumCover = """ SELECT path_img FROM albums WHERE id = ? """
     cursor = cur.execute(sqlAlbumCover, (albumId,))
     albumCover = cursor.fetchone()
@@ -258,14 +262,13 @@ def add_favtrack(id):
     conn = db_connection()
     cur = conn.cursor()
 
+    # récupération des informations de l'utilisateur
     id_track = id
     id_user = session["user"][0]
  
-    trackInfoSql = """ SELECT title FROM tracks WHERE id = ? """
-
+    # requêtes d'ajout / suppression de musiques likées
     sqlAdd = """ INSERT INTO tracks_liked(id_user, id_track)
                     VALUES(?,?) """
-    sqlCheck = """ SELECT id FROM tracks_liked WHERE id_user = ? AND id_track = ? """
     sqlDelete = """ DELETE FROM tracks_liked WHERE id = ? """
 
 
@@ -273,27 +276,32 @@ def add_favtrack(id):
     cursorTracks = cur.execute(sqlTracks)
     track = cursorTracks.fetchall()
 
-    #Requests if the track is already liked
+    # requête de check : si la musique est déjà likée
+    sqlCheck = """ SELECT id FROM tracks_liked WHERE id_user = ? AND id_track = ? """
     cursor = cur.execute(sqlCheck, (id_user, id_track))
 
-    #res countains the id value of the selected row (already liked track)
+    # res contient l'id de la rangée selectionnée (musique déjà likée)
+    # res countains the id value of the selected row (already liked track)
     res = cursor.fetchall()
 
+    # récupération du titre de la musique pour l'affichage
+    trackInfoSql = """ SELECT title FROM tracks WHERE id = ? """
     cursorTrackInfo = cur.execute(trackInfoSql, (id_track,))
     trackInfo = cursorTrackInfo.fetchall()
     
+    # si la chanson n'est pas déjà likée : (ajout)
     if not res:
         cur.execute(sqlAdd, (id_user, id_track))
         conn.commit()
         return render_template(("tracks_page.html"), tracks=track, trackName=trackInfo, isAdded=True)
+    # si la chanson est déjà likée (supression)
     else:
         cur.execute(sqlDelete, (res[0][0],))
         conn.commit()
         return render_template(("tracks_page.html"), tracks=track, trackName=trackInfo, isAdded=False)
 
+
 # route d'ajout d'un artiste aux favoris
-
-
 @app.route('/favartist/<int:id>', methods=['GET', 'POST'])
 def add_favartist(id):
     # check de l'etat de connection de l'utilisateur
