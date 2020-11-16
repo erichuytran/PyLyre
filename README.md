@@ -32,3 +32,15 @@ La méthode la plus simple est d'ouvrir le fichier pylyre.sqlite dans un gestion
   - coller les informations
   - enregistrer les modifications
   - se connecter au site
+  
+  <h3> Notes : </h3>
+  Malheureusement, le PEPE 8 n'est pas forcément respecté partout :(
+  
+  Il était compliqué de faire certaines fonctionnalités face à la restriction du language Javascript. Il y a seulement un script js pour le lecteur audio.
+  
+  Un bouton ne fonctionne pas : le bouton d'albums aimés (situé au milieu de la sidebar). Cependant, le code est le même que la fonction de likes de "tracks" qui kui est fonctionnel. Seule la requete SQL change.
+
+<h3> Choses qu'on aurait aimé faire avec un peu plus de temps : </h3>
+- Rendre fonctionnelle la fonction de 'likes' d'albums
+- Faire un outil de recherche : mettre un input permettant à l'utilisateur de rechercher un album, une musique ou un artiste en particulier
+- Revoir un peu l'UX en affichant le nom des albums et des artistes dans la selection d'albums ou d'artistes.
