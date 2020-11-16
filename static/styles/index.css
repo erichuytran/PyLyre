@@ -1,3 +1,5 @@
+@import "https://fonts.googleapis.com/css?family=Lato";
+
 #navbarLogo {
     width: auto;
     height: 30px;
@@ -20,18 +22,582 @@
     width: 30%;
 }
 
+#btnLogout {
+    display: block;
+	right: 0px;
+	font-family: "Lato";
+	color: rgb(216, 216, 216);
+	letter-spacing: 2px;
+	font-style: normal;
+	font-weight: bold;
+	text-decoration: none;
+	transition: color 0.25s;
+}
+
+#btnLogout:hover {
+    color: #000000;
+}
+
+#btnLogin {
+	font-family: "Lato";
+	font-style: normal;
+	font-weight: bold;
+	text-decoration: none;
+	color: #fff;
+}
+
+#userNav {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+.navbar {
+	background: rgb(19,19,19);
+	background: linear-gradient(93deg, rgba(19,19,19,1) 0%, rgba(77,77,77,1) 100%);
+}
+
+.userNavElement {
+    letter-spacing: 10px;
+    text-align: center;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 33%;
+    color: rgb(240, 240, 240);
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: bold;
+    transition: color 0.25s;
+}
+
+.userNavElement:hover {
+    text-decoration: none;
+    color: #b8860b;
+}
+
 .container {
-    border-radius: 5%;
+    border-radius: 1%;
     width: 45%;
     margin: 2% auto;
-
     padding: 20px 40px 20px 40px;
-
-    background-color: #f4f6f7;
+	background-color: rgb(0, 0, 0, 0.0);
+	color: rgb(240, 240, 240);
+	box-sizing: border-box;
+	box-shadow: 0 0 21px 0px rgba(0, 0, 0, 0.4);
 }
 
 .alert {
     text-align: center;
     margin:3% auto;
     width: 45%;
+}
+
+body {
+	background: rgb(19,19,19);
+	background: linear-gradient(93deg, rgba(19,19,19,1) 0%, rgba(77,77,77,1) 100%);
+}
+
+#bodyContent {
+	margin-left: 4%;
+}
+
+#navBox {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translateX(-50%) translateY(-50%);
+	white-space: nowrap;
+}
+
+.navBoxItem {
+	display: inline-block;
+	width: 450px;
+	height: 450px;	
+	margin: auto 50px;
+	box-sizing: border-box;
+	box-shadow: 0 0 21px 0px rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
+	opacity: 0.6;
+	transition: transform 0.6s, opacity 0.5s;
+}
+
+.navBoxItem:hover {
+	transform: scale(1.2);
+	opacity: 1;
+}
+
+.navBoxItemLink {
+	position: inline;
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	color: rgb(255, 255, 255);
+	text-align: center;
+    font-family: "Lato";
+    font-style: normal;
+	font-weight: bold;
+	letter-spacing: 10px;
+	font-size: 50px;
+	transition: color 0.30s;
+	text-shadow: 5px 5px #000000;
+}
+
+.navBoxItemLink:hover {
+	text-decoration: none;
+    color: #a87903;
+}
+
+#navBoxItemTitle {
+	position: relative;
+	top: 175px
+}
+
+.navBoxSecondItem {
+	display: inline-block;
+	width: 200px;
+	height: 200px;	
+	margin: 50px 50px;
+	box-sizing: border-box;
+	box-shadow: 0 0 21px 0px rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
+	opacity: 0.6;
+	transition: transform 0.6s, opacity 0.5s;
+}
+
+.navBoxSecondItem:hover {
+	transform: scale(1.2);
+	opacity: 1;
+}
+
+.secondItemLink {
+	position: inline;
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+}
+
+#albumInfo {
+	margin: 50px auto 30px 22%;
+	width: 50%;
+}
+
+#artistInfo {
+	margin: 50px auto 0px 22%;
+	width: 50%;
+}
+
+.coverArt {
+	display: block;
+	object-fit: cover;
+	margin: 20px auto;
+  	width:40%;
+	box-sizing: border-box;
+	box-shadow: 0 0 21px 0px rgba(0, 0, 0, 0.4);
+}
+
+#albumName {
+	font-family: "Lato";
+    font-style: normal;
+	font-weight: bold;
+	font-size: 50px;
+	color: rgb(240, 240, 240);
+	text-align: center;
+}
+
+#artistName {
+	font-family: "Lato";
+    font-style: normal;
+	font-weight: bold;
+	font-size: 50px;
+	color: rgb(240, 240, 240);
+	text-align: center;
+}
+
+.likePageDiv {
+	font-family: "Lato";
+    font-style: normal;
+	font-weight: bold;
+	letter-spacing: 10px;
+	color: #a87903;
+	margin: 50px auto 50px auto;
+	width: 11.54%;
+}
+
+#notificationBox {
+	position : absolute;
+	width: 50%;
+	color: #a87903;
+	font-family: "Lato";
+    font-style: normal;
+	text-align: center;
+	font-weight: bold;
+	font-size: 30px;
+	text-shadow: 4px 4px rgba(0, 0, 0, 0.3);
+	letter-spacing: 2px;
+	margin: 0 21%;
+	top: 80%;
+}
+
+.notificationElement {
+	display: inline-block;
+	font-family: "Lato";
+	width: 80%;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	padding: 10px;
+	box-sizing: border-box;
+	font-weight: normal;
+	box-shadow: 0 0 21px 0px rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
+	color: rgb(255, 255, 255);
+	text-decoration: none;
+	transition: color 0.3s;
+}
+
+.notificationElement:hover {
+	color: #a87903;
+	text-decoration: none;
+}
+
+#btnAlbumFav {
+    width: 3%;
+	height: auto;
+	margin: 20px 48% 0px 48%;
+}
+
+.likePageArtists{
+	font-family: "Lato";
+    font-style: normal;
+	font-weight: bold;
+	letter-spacing: 10px;
+	color: #a87903;
+	margin: 50px auto 50px auto;
+	width: 30%;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+	position: fixed;
+	top: 8;
+	bottom: 0;
+	left: 0;
+	width: 4%;
+	background: rgb(19,19,19);
+	background: linear-gradient(200deg, rgba(19,19,19,1) 50%, rgba(32,32,32,1) 100%);
+}
+
+.sidebar:after {
+    content:"";
+    position:absolute;
+    width:100%;
+    bottom:1px;
+    z-index:-1;
+    transform:scale(.9);
+    box-shadow: 0px 0px 8px 2px #000000;
+}
+
+.sidebar-sticky {
+	position: relative;
+	top: 0;
+	height: calc(100vh - 60px);
+	padding-top: .5rem;
+	overflow-x: hidden;
+	overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+	.sidebar-sticky {
+			position: -webkit-sticky;
+			position: sticky;
+	}
+}
+
+.sidebar .nav-link {
+	font-weight: 500;
+	color: #333;
+}
+
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
+  	color: inherit;
+}
+
+.sidebar-heading {
+  	font-size: .75rem;
+  	text-transform: uppercase;
+}
+
+.sidebarIcon {
+	display: inline-block;
+	width: 60%;
+	margin-left: 11px;
+	margin-top: 400%;
+}
+
+/******************************* ************ *******************************/
+/******************************* AUDIO PLAYER *******************************/
+/******************************* ************ *******************************/
+
+
+* {
+    outline: none;
+}
+
+/*👇 for preload play/pause svg 😎*/
+body:after {
+	position: absolute;
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	z-index: -1;
+	content: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/163884/play.svg)
+    url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/163884/pause.svg);
+}
+
+article {
+	font-family: "Lato";
+	position: relative;
+	color: rgb(230, 230, 230);
+	width: 100%;
+	height: 150px;
+	margin: 15px auto;
+	padding: 10px 5%;
+	box-sizing: border-box;
+	box-shadow: 0 0 21px 0px rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
+}
+
+#coverArtImg {
+    position: relative;
+    display: inline;
+    width: auto;
+	height: 100px;
+	margin-bottom: 10px;
+	box-shadow: 0 0 21px 0px rgba(0, 0, 0, 0.9);
+}
+
+#btnFav {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: auto;
+    height: 20px;
+}
+
+.cont {
+    position: absolute;
+    display: inline;
+	margin-left: 20px;
+	margin-top: 4px;
+	text-shadow: rgba(0, 0, 0, 0.5);
+}
+
+#albumLink {
+	color: #a17c00;
+    font-family: "Lato";
+    font-style: normal;
+	transition: color 0.25s;
+}
+
+#albumLink:hover {
+    text-decoration: none;
+    color: #d4b506;
+}
+
+/*
+*style audio tag
+*/
+
+.mejs-container {
+	background: #000;
+	font-family: Helvetica, Arial;
+	text-align: left;
+	vertical-align: top;
+	text-indent: 0;
+	width: 100% !important;
+	height: 20px !important;
+	border-radius: 5px;
+	box-sizing: border-box;
+	box-shadow: 0 0 15px 0px rgba(0, 0, 0, 0.5);
+}
+
+.mejs-container .mejs-controls {
+	height: 100%;
+	background: transparent;
+	display: flex;
+}
+
+.mejs-controls .mejs-time-rail span,
+.mejs-controls .mejs-time-rail a {
+	display: block;
+	width: 180px;
+	height: 100%;
+	border-radius: 0px;
+	cursor: pointer;
+}
+
+.mejs-controls div.mejs-time-rail {
+	padding-top: initial;
+	height: 100%;
+}
+
+.mejs-controls .mejs-time-rail .mejs-time-total {
+	margin: 0;
+}
+
+.mejs-container .mejs-controls .mejs-time {
+	color: #fff;
+	display: block;
+	height: 27px;
+	width: auto;
+	padding: 0;
+	line-height: 25px;
+	overflow: hidden;
+	text-align: center;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
+.mejs-container .mejs-controls .mejs-time {
+	position: absolute;
+	color: rgba(256, 256, 256, 0.3);
+	right: 10px;
+	bottom: 0;
+	top: 0;
+	margin: auto;
+	font-family: "Lato";
+	font-size: 18px;
+	pointer-events: none;
+}
+
+.mejs-controls .mejs-time-rail .mejs-time-float-corner {
+	display: none;
+}
+
+.mejs-controls .mejs-time-rail .mejs-time-float {
+	position: absolute;
+	background: #000;
+	width: 46px;
+	height: 20px;
+	border: none;
+	top: -25px;
+	margin-left: -18px;
+	text-align: center;
+	color: #fff;
+	border-radius: 3px;
+}
+
+.mejs-controls .mejs-time-rail .mejs-time-float-current {
+	margin: 0;
+	margin-top: 4px;
+	width: 100%;
+	display: block;
+	text-align: center;
+	left: 0;
+}
+
+.mejs-container .mejs-controls div {
+	height: 100%;
+	width: 100px;
+	position: relative;
+}
+
+.mejs-controls .mejs-button button {
+	margin: 0;
+	padding: 0;
+	position: relative;
+	height: 100%;
+	width: 100%;
+	border: 0 !important;
+	background: transparent;
+	outline: none;
+}
+
+.mejs-controls .mejs-play:after {
+	position: absolute;
+	content: "";
+	background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/163884/play.svg)
+		no-repeat;
+	width: 7px;
+	height: 12px;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	margin: auto;
+	transition: all 100ms linear;
+	pointer-events: none;
+}
+
+.mejs-controls .mejs-pause:after {
+	position: absolute;
+	content: "";
+	background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/163884/pause.svg)
+		no-repeat;
+	width: 7px;
+	height: 12px;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	margin: auto;
+	transition: all 100ms linear;
+	pointer-events: none;
+}
+
+.mejs-controls .mejs-time-rail .mejs-time-total {
+	background: rgb(19,19,19);
+	background: linear-gradient(263deg, rgba(19,19,19,1) 0%, rgba(31,31,31,1) 100%);
+}
+
+.mejs-controls .mejs-time-rail .mejs-time-loaded {
+	background: #3c3838;
+	background-image: -webkit-gradient(
+		linear,
+		0 0,
+		100% 100%,
+		color-stop(0.25, rgba(255, 255, 255, 0.2)),
+		color-stop(0.25, transparent),
+		color-stop(0.5, transparent),
+		color-stop(0.5, rgba(255, 255, 255, 0.2)),
+		color-stop(0.75, rgba(255, 255, 255, 0.2)),
+		color-stop(0.75, transparent),
+		to(transparent)
+	);
+	background-image: -moz-linear-gradient(
+		-45deg,
+		rgba(255, 255, 255, 0.2) 25%,
+		transparent 25%,
+		transparent 50%,
+		rgba(255, 255, 255, 0.2) 50%,
+		rgba(255, 255, 255, 0.2) 75%,
+		transparent 75%,
+		transparent
+	);
+	background-size: 50px 50px;
+	animation: move 3s linear infinite;
+	opacity: 0.1;
+}
+
+.mejs-controls .mejs-time-rail .mejs-time-current {
+	background: linear-gradient(to right, #131313, #363636);
+}
+
+.mejs-controls .mejs-button button:focus {
+	outline: none;
+}
+
+@-webkit-keyframes move {
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 50px 50px;
+	}
 }

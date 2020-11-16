@@ -1,73 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %} {% endblock %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.22.0/mediaelementplayer.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
-    {% block title %} {% endblock %}
-</head>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+        {% if session["user"] is defined %}
 
         <!-- Logo -->
-        <a class="navbar-brand" href="/">
-          <img id="navbarLogo" src="{{ url_for('static', filename='/img/PylyreLogo.png') }}" alt="Logo">
-       </a>
+        <a class="navbar-brand" href="/main_page">
+            <img id="navbarLogo" src="{{ url_for('static', filename='/img/PylyreLogo.png') }}" alt="Logo">
+        </a>
+
+
+        <div id="userNav">
+            <a href="{{ url_for('albums_page', id_artist=0) }}" class="userNavElement">ALBUMS</a>
+            <a href="/tracks_page" class="userNavElement">TRACKS</a>
+            <a href="/artists_page" class="userNavElement">ARTISTS</a>
+        </div>
+
+        <a type="submit" href="{{ url_for('logout') }}" id="btnLogout">LOGOUT</a>
+
+        <!-- SIDEBAR -->
+        <nav class=" sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('tracks_page', liked=True) }}" >
+                            <img src="{{ url_for('static', filename='/img/likes.png') }}" alt="likeLink" class="sidebarIcon">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="{{ url_for('static', filename='/img/likesAlbums.png') }}" alt="likeAlbumsLink" class="sidebarIcon">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('artists_page', liked=True) }}">
+                            <img src="{{ url_for('static', filename='/img/likesArtists.png') }}" alt="likeArtistsLink" class="sidebarIcon">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        {% else %}
+
+        <!-- Logo -->
+        <a class="navbar-brand" href="/main_page">
+            <img id="navbarLogo" src="{{ url_for('static', filename='/img/PylyreLogo.png') }}" alt="Logo">
+        </a>
 
         <!-- Login Dropdown -->
         <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <div class="btn-group">
-                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false" id="btnLogin">
                             Login
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
                             <form class="px-4 py-3" method="post">
                                 <div class="form-group">
                                     <label for="exampleDropdownFormEmail1">Email address</label>
-                                    <input type="email" class="form-control" id="exampleDropdownFormEmail1" name="email" placeholder="email@example.com">
+                                    <input type="email" class="form-control" id="exampleDropdownFormEmail1" name="email"
+                                        placeholder="email@example.com">
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleDropdownFormPassword1">Password</label>
-                                    <input type="password" class="form-control" id="exampleDropdownFormPassword1" name="password" placeholder="Password">
+                                    <input type="password" class="form-control" id="exampleDropdownFormPassword1"
+                                        name="password" placeholder="Password">
                                 </div>
-
-                                <!-- Remember me -->
-                                <!-- <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                                        <label class="form-check-label" for="dropdownCheck">
-                                            Remember me
-                                        </label>
-                                    </div>
-                                </div> -->
-                                {% if session["user"] is defined %}
-
-                                     <a type="submit" href="{{ url_for('logout') }}"  class="btn btn-primary">Deconection</a>
-                                {% else %}
-                                 <button type="submit" class="btn btn-primary">Sign in</button>
-                                {% endif %}
-
+                                <button type="submit" class="btn btn-dark">Sign in</button>
                             </form>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ url_for('signUp') }}">New to PyLyre? Sign up</a>
-                            <a class="dropdown-item" href="#">Forgot password?</a>
+                            <a class="dropdown-item" href="/signUp">New to PyLyre? Sign up</a>
                         </div>
                     </div>
                 </li>
             </ul>
         </div>
+        {% endif %}
+
     </nav>
+
 <body>
-
-{% block body %} {% endblock %}
-
-
-
+    <div id="bodyContent">
+        {% block body %} {% endblock %}
+    </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.22.0/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.22.0/mediaelement-and-player.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='scripts/audioPlayer.js') }}"></script>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 </html>

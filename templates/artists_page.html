@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Pylyre</title>{% endblock %}
+
+{% block body %}
+
+{% if likePage == True: %}
+    <h3 class="likePageArtists">SUBSCRIBED ARTISTS</h3>
+{% else: %}
+    <!-- Don't do anything -->
+{% endif %}
+
+{% for artist in artists %}
+
+<div class="navBoxSecondItem" style="background-image: url('{{ artist[2] }}');background-size: cover;""><a href="{{ url_for('albums_page', id_artist= artist[0]) }}" class="secondItemLink"></a></div>
+
+{% endfor %}
+
+{% endblock %}

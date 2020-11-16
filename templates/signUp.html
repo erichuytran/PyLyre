@@ -4,6 +4,15 @@
 
 {{ session["user"] }}
 
+{% if auth == False: %}
+    <div class="alert alert-danger" role="alert">
+        This email is already taken. Please login if you already have an account.
+    </div>
+{% else: %}
+    {{ super() }}
+{% endif %}
+
+
 <div class="container">
 
     <div>

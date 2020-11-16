@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Pylyre</title>{% endblock %}
+
+{% block body %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-waves/0.7.5/waves.min.css">
+    <link rel="stylesheet" href="https://michael-zhigulin.github.io/mz-codepen-projects/Material%20Design%20UI%20Audio%20Player/font/font.css">
+
+    <div id="navBox">
+        <div class="navBoxItem"><a href="{{ url_for('albums_page', id_artist=0) }}" class="navBoxItemLink"><span id="navBoxItemTitle">ALBUMS</span></a></div>
+        <div class="navBoxItem"><a href="/tracks_page" class="navBoxItemLink"><span id="navBoxItemTitle">TRACKS</span></a></div>
+        <div class="navBoxItem"><a href="/artists_page" class="navBoxItemLink"><span id="navBoxItemTitle">ARTISTS</span></a></div>
+    </div>
+
+    <div id="notificationBox">
+        {% for album in albumInfo %}
+            {% if album[1] in ArtistLiked and album[4] > session["user"][6] %}
+                NEW RELEASES : <a href="{{ url_for('album_selected', albumId=album[0]) }}" class="notificationElement">{{ album[6] }} - {{ album[2] }}</a>
+            {% endif %}  
+        {% endfor %}            
+    </div>
+        
+{% endblock %}
