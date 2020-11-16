@@ -7,6 +7,12 @@ Audio Streaming Platform - Projet Python3 IPI
 
 ![Database structure](https://i.ibb.co/1vyHVc9/draw-SQL-export-2020-10-20-10-16.png)
 
+<h2> Guide de premiers pas </h2>
+
+Se créer un compte (plus rigolo) ou utiliser le compte suivant (avec déjà des likes de musiques, des abonnements à des artistes) :
+  -> email : erictran@live.fr
+  -> mot de passe : admin
+
 <h3> Spécifications </h3>
 
 Il va falloir modifier / ajouter des infos dans la BDD pour voir une fonctionnalité (notification lorsqu'une nouvelle musique sort) : ajouter un album
