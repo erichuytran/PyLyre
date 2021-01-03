@@ -1,65 +1,45 @@
-from flask import Flask, render_template, request, redirect, session, jsonify
+from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-import sqlite3, json
+import sqlite3
 
-app = Flask(__name__, template_folder='templates', static_folder='static')
+app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config["SECRET_KEY"] = "IPI"
 
-def isLoggedIn():
-    if not session:
-        print("SESSION : EMPTY, REDIRECTION")
-        return False
-    else:
-        return True
 
 # fonction de connection à la bdd
 def db_connection():
     conn = None
     try:
         conn = sqlite3.connect("pylyre.sqlite")
+        conn.row_factory = sqlite3.Row
     except sqlite3.Error as e:
         print(e)
     return conn
 
-# fonction permettant de regarder si un utilisateur est déjà présent dans la bdd affin d'éviter les doublons
-def chekUser(email, password):
+
+# fonction permettant de regarder si le mot de passe d’un utilisateur est correct
+def checkUser(email, password):
     conn = db_connection()
     cur = conn.cursor()
+    cursor = cur.execute("SELECT id, password FROM users WHERE email=?", (email,))
+    users = cursor.fetchall()
+    if users and check_password_hash(users[0]["password"], password):
+        session["user"] = users[0]["id"]
+        return True
 
-    if request.method == 'POST':
-        # récupération du mot de passe
-        sqlGetPasswordHash = """ SELECT password FROM users WHERE email=? """
-        try:
-            cursor = cur.execute(sqlGetPasswordHash, (email,))
-            passwordHash = cursor.fetchall()
-            if check_password_hash(passwordHash[0][0], password) == True:
-                # le mot de passe donné correspond à celui de l'utilisateur :
-                sql = """ SELECT * FROM users WHERE email=? AND password=? """
-                cursor = cur.execute(sql, (email, passwordHash[0][0]))
-                users = cursor.fetchall()
-                if users:
-                    # création d'une session
-                    session["user"] = users[0]
-                    return "true"
-                else:
-                    return "false"
-            else:
-                return "false"
+    return False
 
-        except IndexError as e:
-            print(e)
-            return "false"
-        
+
 # page d'accueil
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/", methods=["GET", "POST"])
 def index():
     # action si l'utilisateur à appuyé sur le bouton de connection
-    if request.method == 'POST':
+    if request.method == "POST":
         # récupération des champs du formulaire
         email = request.form["email"]
         password = request.form["password"]
-        if chekUser(email, password) == "true":
+        if checkUser(email, password):
             # si l'utilisateur s'est connecté avec succès, on affiche main_page
             return render_template("main_page.html")
         else:
@@ -68,14 +48,15 @@ def index():
     else:
         return render_template("index.html")
 
+
 # page d'inscription
-@app.route('/signUp', methods=['GET', 'POST'])
+@app.route("/signUp", methods=["GET", "POST"])
 def signUp():
     conn = db_connection()
     cur = conn.cursor()
 
     # actions si l'utilisateur à soumis le formulaire d'inscription
-    if request.method == 'POST':
+    if request.method == "POST":
         # récupération des champs du formulaire
         name = request.form["name"]
         lastname = request.form["lastName"]
@@ -83,14 +64,14 @@ def signUp():
         email = request.form["email"]
         password = request.form["password"]
         # génération du mot de passe crypté
-        password_hash = generate_password_hash(password, method='sha1', salt_length=8)
+        password_hash = generate_password_hash(password, method="sha1", salt_length=8)
 
         try:
             # mise à jour de la bdd avec les données d'inscription du nouvel utilisateur
             sql = """ INSERT INTO users(first_name, last_name,pseudo, email, password)
                     VALUES(?,?, ?, ?, ?) """
-            cur.execute(sql, (name, lastname, pseudo, email, password_hash))       
-            conn.commit() 
+            cur.execute(sql, (name, lastname, pseudo, email, password_hash))
+            conn.commit()
 
         # gestion d'erreur
         except sqlite3.Error as e:
@@ -103,12 +84,13 @@ def signUp():
     else:
         return render_template("signUp.html")
 
+
 # route de déconnexion
-@app.route('/logout', methods=['GET', 'POST'])
+@app.route("/logout", methods=["GET", "POST"])
 def logout():
     conn = db_connection()
     cur = conn.cursor()
-    id_user = session["user"][0]
+    id_user = session["user"]
     date = datetime.utcnow()
 
     sql = """ UPDATE users  SET date_last_login = ?  WHERE id = ? """
@@ -116,19 +98,20 @@ def logout():
     cur.execute(sql, (date, id_user))
     conn.commit()
     session.clear()
-    #redirection vers la page d'accueil après la déconnexion
+    # redirection vers la page d'accueil après la déconnexion
     return redirect("/")
 
+
 # page principale
-@app.route('/main_page', methods=['GET', 'POST'])
+@app.route("/main_page", methods=["GET", "POST"])
 def main_page():
     # check de l'etat de connection de l'utilisateur
-    if isLoggedIn() == False:
+    if not session:
         return redirect("/")
-        
+
     conn = db_connection()
     cur = conn.cursor()
-    id_user = session["user"][0]
+    id_user = session["user"]
 
     # récupération d'informations pour les notifications de nouvelles sorties
     # récupération des artistes likés
@@ -137,7 +120,9 @@ def main_page():
     ArtistLiked = [item[0] for item in curLikeArtists.fetchall()]
 
     # récupération des informations d'albums
-    albumInfo = """ SELECT * FROM albums INNER JOIN artists ON albums.id_artist = artists.id """
+    albumInfo = (
+        """ SELECT * FROM albums INNER JOIN artists ON albums.id_artist = artists.id """
+    )
     cursor = cur.execute(albumInfo)
     albumInfo = cursor.fetchall()
 
@@ -146,13 +131,20 @@ def main_page():
     cursorDateConn = cur.execute(dateConne, (id_user,))
     dateC = cursorDateConn.fetchall()
 
-    return render_template("main_page.html", dateC=dateC, albumInfo=albumInfo, ArtistLiked=ArtistLiked, id_user=id_user)
+    return render_template(
+        "main_page.html",
+        dateC=dateC,
+        albumInfo=albumInfo,
+        ArtistLiked=ArtistLiked,
+        id_user=id_user,
+    )
+
 
 # page de selection d'albums
-@app.route('/albums_page/<int:id_artist>', methods=['GET', 'POST'])
+@app.route("/albums_page/<int:id_artist>", methods=["GET", "POST"])
 def albums_page(id_artist):
     # check de l'etat de connection de l'utilisateur
-    if isLoggedIn() == False:
+    if not session:
         return redirect("/")
 
     conn = db_connection()
@@ -172,11 +164,12 @@ def albums_page(id_artist):
 
     return render_template("albums_page.html", albums=album, id_artist=id_artist)
 
+
 # page d'album selectionné
-@app.route('/album_selected/<int:albumId>', methods=['GET', 'POST'])
+@app.route("/album_selected/<int:albumId>", methods=["GET", "POST"])
 def album_selected(albumId):
     # check de l'etat de connection de l'utilisateur
-    if isLoggedIn() == False:
+    if not session:
         return redirect("/")
 
     conn = db_connection()
@@ -186,77 +179,75 @@ def album_selected(albumId):
     sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id WHERE id_album = ? """
     cursor = cur.execute(sqlTracks, (albumId,))
     track = cursor.fetchall()
-    
+
     # récupération de l'image de l'album
     sqlAlbumCover = """ SELECT path_img FROM albums WHERE id = ? """
     cursor = cur.execute(sqlAlbumCover, (albumId,))
     albumCover = cursor.fetchone()
-    return render_template("album_selected.html", tracks=track, albumCoverArt=albumCover)
+    return render_template(
+        "album_selected.html", tracks=track, albumCoverArt=albumCover
+    )
 
 
 # page d'affichage des musiques
-@app.route('/tracks_page', methods=['GET', 'POST'])
+@app.route("/tracks_page", methods=["GET", "POST"])
 def tracks_page():
     # check de l'etat de connection de l'utilisateur
-    if isLoggedIn() == False:
+    if not session:
         return redirect("/")
 
     # récupération de l'argument 'liked' permettant de savoir si l'on doit afficher toutes les musiques ou seulement celles aimées par l'utilisateur
-    liked = request.args.get('liked', False)
+    liked = request.args.get("liked", False)
 
     conn = db_connection()
     cur = conn.cursor()
-    id_user = session["user"][0]
+    id_user = session["user"]
 
     # adaptation de la requette en fonction de la valeur de 'liked'
-    # affichage de toutes les musiques
-    if liked == False:
-        sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
-        cursor = cur.execute(sql)
-        track = cursor.fetchall()
-        return render_template("tracks_page.html", tracks=track, likePage=False)
-    
-    # affichage des musiques likées
-    else:
+    if liked:
+        # affichage des musiques likées
         sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id INNER JOIN tracks_liked ON tracks.id = tracks_liked.id_track WHERE id_user = ? """
         cursor = cur.execute(sql, (id_user,))
-        track = cursor.fetchall()
-        return render_template("tracks_page.html", tracks=track, likePage=True)
-      
+    else:
+        # affichage de toutes les musiques
+        sql = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
+        cursor = cur.execute(sql)
+
+    track = cursor.fetchall()
+    return render_template("tracks_page.html", tracks=track, likePage=liked)
+
+
 # page de selection d'artistes
-@app.route('/artists_page', methods=['GET', 'POST'])
+@app.route("/artists_page", methods=["GET", "POST"])
 def artists_page():
     # check de l'etat de connection de l'utilisateur
-    if isLoggedIn() == False:
+    if not session:
         return redirect("/")
 
     # récupération de l'argument 'liked' permettant de savoir si l'on doit afficher tous les artistes ou seulement ceux aimés par l'utilisateur
-    liked = request.args.get('liked', False)
+    liked = request.args.get("liked", False)
 
     conn = db_connection()
     cur = conn.cursor()
 
     # adaptation de la requette en fonction de la valeur de 'liked'
-    # affichage de tous les artistes
-    if liked == False:
-        sql = """ SELECT * FROM artists """
-        cursor = cur.execute(sql)
-        artist = cursor.fetchall()
-        return render_template("artists_page.html", artists=artist, likePage=False)
-    
-        #affichage des artistes likés
-    else:
+    # affichage des artistes likés
+    if liked:
         sql = """ SELECT * FROM artists INNER JOIN artists_liked ON artists.id = id_artist """
-        cursor = cur.execute(sql)   
-        artist = cursor.fetchall()
-        return render_template("artists_page.html", artists=artist, likePage=True)
-    
+    # affichage de tous les artistes
+    else:
+        sql = """ SELECT * FROM artists """
+
+    cursor = cur.execute(sql)
+    artist = cursor.fetchall()
+    return render_template("artists_page.html", artists=artist, likePage=liked)
+
 
 # route d'ajout d'une musique aux favoris
-@app.route('/favtrack/<int:id>', methods=['GET', 'POST'])
+@app.route("/favtrack/<int:id>", methods=["GET", "POST"])
 def add_favtrack(id):
     # check de l'etat de connection de l'utilisateur
-    if isLoggedIn() == False:
+    if not session:
         return redirect("/")
 
     conn = db_connection()
@@ -264,13 +255,12 @@ def add_favtrack(id):
 
     # récupération des informations de l'utilisateur
     id_track = id
-    id_user = session["user"][0]
- 
+    id_user = session["user"]
+
     # requêtes d'ajout / suppression de musiques likées
     sqlAdd = """ INSERT INTO tracks_liked(id_user, id_track)
                     VALUES(?,?) """
     sqlDelete = """ DELETE FROM tracks_liked WHERE id = ? """
-
 
     sqlTracks = """ SELECT * FROM tracks INNER JOIN artists ON tracks.id_artist = artists.id INNER JOIN albums ON tracks.id_album = albums.id """
     cursorTracks = cur.execute(sqlTracks)
@@ -288,31 +278,29 @@ def add_favtrack(id):
     trackInfoSql = """ SELECT title FROM tracks WHERE id = ? """
     cursorTrackInfo = cur.execute(trackInfoSql, (id_track,))
     trackInfo = cursorTrackInfo.fetchall()
-    
-    # si la chanson n'est pas déjà likée : (ajout)
-    if not res:
-        cur.execute(sqlAdd, (id_user, id_track))
-        conn.commit()
-        return render_template(("tracks_page.html"), tracks=track, trackName=trackInfo, isAdded=True)
-    # si la chanson est déjà likée (supression)
-    else:
+
+    if res:
         cur.execute(sqlDelete, (res[0][0],))
-        conn.commit()
-        return render_template(("tracks_page.html"), tracks=track, trackName=trackInfo, isAdded=False)
+    else:
+        # si la chanson n'est pas déjà likée : (ajout)
+        cur.execute(sqlAdd, (id_user, id_track))
+    conn.commit()
+    return render_template(
+        ("tracks_page.html"), tracks=track, trackName=trackInfo, isAdded=(not res))
 
 
 # route d'ajout d'un artiste aux favoris
-@app.route('/favartist/<int:id>', methods=['GET', 'POST'])
+@app.route("/favartist/<int:id>", methods=["GET", "POST"])
 def add_favartist(id):
     # check de l'etat de connection de l'utilisateur
-    if isLoggedIn() == False:
+    if not session:
         return redirect("/")
 
     conn = db_connection()
     cur = conn.cursor()
 
     id_artist = id
-    id_user = session["user"][0]
+    id_user = session["user"]
 
     sqlAdd = """ INSERT INTO artists_liked(id_user, id_artist)
                     VALUES(?,?) """
@@ -323,19 +311,16 @@ def add_favartist(id):
     cursor = cur.execute(sqlAlbum, (id_artist,))
     album = cursor.fetchall()
 
-    #Requests if the track is already liked
+    # Requests if the track is already liked
     cursor = cur.execute(sqlCheck, (id_user, id_artist))
 
-    #res countains the id value of the selected row (already liked artist)
+    # res countains the id value of the selected row (already liked artist)
     res = cursor.fetchall()
 
-    if not res:
-        cur.execute(sqlAdd, (id_user, id_artist))
-        conn.commit()
-        return render_template(("albums_page.html"), id_artist=id_artist, albums=album, isAdded=True)
-    else:
+    if res:
         cur.execute(sqlDelete, (res[0][0],))
-        conn.commit()
-        return render_template(("albums_page.html"), id_artist=id_artist, albums=album, isAdded=False)
-
-
+    else:
+        cur.execute(sqlAdd, (id_user, id_artist))
+    conn.commit()
+    return render_template(
+        ("albums_page.html"), id_artist=id_artist, albums=album, isAdded=(not res))
