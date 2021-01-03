@@ -6,44 +6,29 @@ import sqlite3
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config["SECRET_KEY"] = "IPI"
 
+
 # fonction de connection à la bdd
 def db_connection():
     conn = None
     try:
         conn = sqlite3.connect("pylyre.sqlite")
+        conn.row_factory = sqlite3.Row
     except sqlite3.Error as e:
         print(e)
     return conn
 
 
-# fonction permettant de regarder si un utilisateur est déjà présent dans la bdd affin d'éviter les doublons
-def chekUser(email, password):
+# fonction permettant de regarder si le mot de passe d’un utilisateur est correct
+def checkUser(email, password):
     conn = db_connection()
     cur = conn.cursor()
+    cursor = cur.execute("SELECT id, password FROM users WHERE email=?", (email,))
+    users = cursor.fetchall()
+    if users and check_password_hash(users[0]["password"], password):
+        session["user"] = users[0]["id"]
+        return True
 
-    if request.method == "POST":
-        # récupération du mot de passe
-        sqlGetPasswordHash = """ SELECT password FROM users WHERE email=? """
-        try:
-            cursor = cur.execute(sqlGetPasswordHash, (email,))
-            passwordHash = cursor.fetchall()
-            if check_password_hash(passwordHash[0][0], password):
-                # le mot de passe donné correspond à celui de l'utilisateur :
-                sql = """ SELECT * FROM users WHERE email=? AND password=? """
-                cursor = cur.execute(sql, (email, passwordHash[0][0]))
-                users = cursor.fetchall()
-                if users:
-                    # création d'une session
-                    session["user"] = users[0]
-                    return "true"
-                else:
-                    return "false"
-            else:
-                return "false"
-
-        except IndexError as e:
-            print(e)
-            return "false"
+    return False
 
 
 # page d'accueil
@@ -54,7 +39,7 @@ def index():
         # récupération des champs du formulaire
         email = request.form["email"]
         password = request.form["password"]
-        if chekUser(email, password) == "true":
+        if checkUser(email, password):
             # si l'utilisateur s'est connecté avec succès, on affiche main_page
             return render_template("main_page.html")
         else:
@@ -105,7 +90,7 @@ def signUp():
 def logout():
     conn = db_connection()
     cur = conn.cursor()
-    id_user = session["user"][0]
+    id_user = session["user"]
     date = datetime.utcnow()
 
     sql = """ UPDATE users  SET date_last_login = ?  WHERE id = ? """
@@ -126,7 +111,7 @@ def main_page():
 
     conn = db_connection()
     cur = conn.cursor()
-    id_user = session["user"][0]
+    id_user = session["user"]
 
     # récupération d'informations pour les notifications de nouvelles sorties
     # récupération des artistes likés
@@ -216,7 +201,7 @@ def tracks_page():
 
     conn = db_connection()
     cur = conn.cursor()
-    id_user = session["user"][0]
+    id_user = session["user"]
 
     # adaptation de la requette en fonction de la valeur de 'liked'
     if liked:
@@ -270,7 +255,7 @@ def add_favtrack(id):
 
     # récupération des informations de l'utilisateur
     id_track = id
-    id_user = session["user"][0]
+    id_user = session["user"]
 
     # requêtes d'ajout / suppression de musiques likées
     sqlAdd = """ INSERT INTO tracks_liked(id_user, id_track)
@@ -315,7 +300,7 @@ def add_favartist(id):
     cur = conn.cursor()
 
     id_artist = id
-    id_user = session["user"][0]
+    id_user = session["user"]
 
     sqlAdd = """ INSERT INTO artists_liked(id_user, id_artist)
                     VALUES(?,?) """
